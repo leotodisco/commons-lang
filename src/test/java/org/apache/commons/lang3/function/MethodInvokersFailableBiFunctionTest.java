@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import org.apache.commons.lang3.exception.CustomCheckedException;
 import org.apache.commons.lang3.exception.CustomUncheckedException;

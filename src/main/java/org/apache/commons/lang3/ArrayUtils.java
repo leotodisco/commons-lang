@@ -3548,7 +3548,7 @@ public class ArrayUtils {
         if (array1 == null || array2 == null) {
             throw new IllegalArgumentException("The Array must not be null");
         }
-        return array1.getClass().getName().equals(array2.getClass().getName());
+        return array1.getClass().isAssignableFrom(array2.getClass());
     }
 
     /**
