@@ -104,12 +104,16 @@ public abstract class AbstractConcurrentInitializerCloseAndExceptionsTest extend
                 (CloseableObject) -> methodThatThrowsException(ExceptionToThrow.IOException));
         try {
             initializer.get();
-            ((AbstractConcurrentInitializer) initializer).close();
-            fail();
         } catch (Exception e) {
-            assertThat(e, instanceOf(ConcurrentException.class));
             assertThat(e.getCause(), instanceOf(IOException.class));
         }
+        try {
+            ((AbstractConcurrentInitializer) initializer).close();
+            fail();
+        } catch (Exception e){
+            assertThat(e, instanceOf(ConcurrentException.class));
+        }
+
     }
 
     /**
