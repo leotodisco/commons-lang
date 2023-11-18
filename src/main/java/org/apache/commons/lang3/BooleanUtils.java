@@ -19,6 +19,7 @@ package org.apache.commons.lang3;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -525,20 +526,15 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if the String doesn't match
      */
     public static boolean toBoolean(final String str, final String trueString, final String falseString) {
-        if (str == trueString) {
+
+        if (Objects.equals(str, trueString)) {
             return true;
         }
-        if (str == falseString) {
+
+        if (Objects.equals(str, falseString)) {
             return false;
         }
-        if (str != null) {
-            if (str.equals(trueString)) {
-                return true;
-            }
-            if (str.equals(falseString)) {
-                return false;
-            }
-        }
+
         throw new IllegalArgumentException("The String did not match either specified value");
     }
 
