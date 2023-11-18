@@ -5301,8 +5301,9 @@ public class ArrayUtils {
      */
     // package protected for access by unit tests
     static Object removeAll(final Object array, final int... indices) {
-        if(array == null) //if array is null, throw a IndexOutOfBoundException, this prevents a NullPointerException
+        if(array == null) { //if array is null, throw a IndexOutOfBoundException, this prevents a NullPointerException
             throw new IndexOutOfBoundsException("Array is null");
+        }
 
         final int length = getLength(array);
         int diff = 0; // number of distinct indexes, i.e. number of entries that will be removed
