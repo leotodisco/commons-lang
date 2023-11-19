@@ -828,6 +828,10 @@ public class TypeUtils {
             return null;
         }
 
+        if (cls == null) {
+            throw new NullPointerException();
+        }
+
         // can't work with primitives
         if (cls.isPrimitive()) {
             // both classes are primitives?
@@ -1220,6 +1224,10 @@ public class TypeUtils {
         // get the target type's type arguments including owner type arguments
         final Map<TypeVariable<?>, Type> toTypeVarAssigns = getTypeArguments(toParameterizedType,
                 toClass, typeVarAssigns);
+
+        if (toTypeVarAssigns == null) {
+            throw new NullPointerException();
+        }
 
         // now to check each type argument
         for (final TypeVariable<?> var : toTypeVarAssigns.keySet()) {
