@@ -202,7 +202,10 @@ public class BackgroundInitializer<T> extends AbstractConcurrentInitializer<T, E
         try {
             future.get();
             return true;
-        } catch (CancellationException | ExecutionException | InterruptedException e) {
+        } catch (CancellationException | ExecutionException e) {
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return false;
         }
     }
