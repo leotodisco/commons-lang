@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -1113,6 +1114,9 @@ public class ClassUtils {
 
                 @Override
                 public Class<?> next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
                     final Class<?> result = next.getValue();
                     next.setValue(result.getSuperclass());
                     return result;

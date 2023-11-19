@@ -207,7 +207,7 @@ public class MultiBackgroundInitializer
      * @since 3.14.0
      */
     @Override
-    public boolean isInitialized() {
+    public synchronized boolean isInitialized() {
         if (childInitializers.isEmpty()) {
             return false;
         }
