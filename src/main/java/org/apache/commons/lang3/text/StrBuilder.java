@@ -2975,7 +2975,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         @Override
         public long skip(long n) {
             if (pos + n > StrBuilder.this.size()) {
-                n = StrBuilder.this.size() - pos;
+                n = (long) StrBuilder.this.size() - (long) pos;
             }
             if (n < 0) {
                 return 0;

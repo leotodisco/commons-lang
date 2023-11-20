@@ -1603,10 +1603,10 @@ public class DateUtils {
         // Fragments bigger than a day require a breakdown to days
         switch (fragment) {
             case Calendar.YEAR:
-                result += unit.convert(calendar.get(Calendar.DAY_OF_YEAR) - offset, TimeUnit.DAYS);
+                result += unit.convert(calendar.get(Calendar.DAY_OF_YEAR) - (long) offset, TimeUnit.DAYS);
                 break;
             case Calendar.MONTH:
-                result += unit.convert(calendar.get(Calendar.DAY_OF_MONTH) - offset, TimeUnit.DAYS);
+                result += unit.convert(calendar.get(Calendar.DAY_OF_MONTH) - (long) offset, TimeUnit.DAYS);
                 break;
             default:
                 break;
