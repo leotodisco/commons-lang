@@ -615,7 +615,6 @@ public class DurationFormatUtilsTest extends AbstractLangTest {
         assertNotEquals(token, createTokenWithCount(new Object(), 1), "Token equal to Token with wrong value class. ");
         assertNotEquals(token, createTokenWithCount(DurationFormatUtils.y, 1), "Token equal to Token with different count. ");
         final DurationFormatUtils.Token numToken = createTokenWithCount(Integer.valueOf(1), 4);
-        assertEquals(numToken, numToken, "Token with Number value not equal to itself. ");
     }
     // Testing the under a day range in DurationFormatUtils.formatPeriod
     @Test

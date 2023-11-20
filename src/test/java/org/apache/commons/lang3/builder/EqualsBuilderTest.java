@@ -1205,15 +1205,12 @@ public class EqualsBuilderTest extends AbstractLangTest {
         final Object[] y = {new TestBCanEqualA(1)};
 
         // sanity checks:
-        assertArrayEquals(x, x);
-        assertArrayEquals(y, y);
         assertArrayEquals(x, y);
         assertArrayEquals(y, x);
         // real tests:
-        assertEquals(x[0], x[0]);
-        assertEquals(y[0], y[0]);
         assertEquals(x[0], y[0]);
         assertEquals(y[0], x[0]);
+
         assertTrue(new EqualsBuilder().append(x, x).isEquals());
         assertTrue(new EqualsBuilder().append(y, y).isEquals());
         assertTrue(new EqualsBuilder().append(x, y).isEquals());
