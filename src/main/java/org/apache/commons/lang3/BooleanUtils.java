@@ -66,6 +66,8 @@ public class BooleanUtils {
      */
     public static final String ON = "on";
 
+    private static final String ARRAY = "array";
+
     /**
      * The true String {@code "true"}.
      *
@@ -99,7 +101,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static boolean and(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         for (final boolean element : array) {
             if (!element) {
                 return false;
@@ -131,7 +133,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static Boolean and(final Boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         return and(ArrayUtils.toPrimitive(array)) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -280,7 +282,7 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if {@code array} is empty.
      */
     public static boolean oneHot(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         boolean result = false;
         for (final boolean element: array) {
             if (element) {
@@ -333,7 +335,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static boolean or(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         for (final boolean element : array) {
             if (element) {
                 return true;
@@ -366,7 +368,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static Boolean or(final Boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         return or(ArrayUtils.toPrimitive(array)) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -1171,7 +1173,7 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if {@code array} is empty.
      */
     public static boolean xor(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         // false if the neutral element of the xor operator
         boolean result = false;
         for (final boolean element : array) {
@@ -1201,7 +1203,7 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if {@code array} is empty.
      */
     public static Boolean xor(final Boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         return xor(ArrayUtils.toPrimitive(array)) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -1213,6 +1215,8 @@ public class BooleanUtils {
      * to operate.</p>
      */
     public BooleanUtils() {
+        //This constructor is public to permit tools that require a JavaBean instance
+        //to operate.
     }
 
 }

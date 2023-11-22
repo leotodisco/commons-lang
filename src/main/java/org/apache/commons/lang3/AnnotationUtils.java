@@ -97,6 +97,8 @@ public class AnnotationUtils {
      * instance to operate.</p>
      */
     public AnnotationUtils() {
+        //This constructor is public to permit tools that require a JavaBean
+        //instance to operate
     }
 
     /**
