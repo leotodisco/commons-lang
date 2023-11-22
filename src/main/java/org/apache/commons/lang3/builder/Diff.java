@@ -42,7 +42,7 @@ public abstract class Diff<T> extends Pair<T, T> {
     private static final long serialVersionUID = 1L;
 
     /** The field type. */
-    private final Type type;
+    private final transient Type type;
 
     /** The field name. */
     private final String fieldName;

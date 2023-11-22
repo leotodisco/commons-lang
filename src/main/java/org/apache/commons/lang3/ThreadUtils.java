@@ -578,5 +578,8 @@ public class ThreadUtils {
      * </p>
      */
     public ThreadUtils() {
+        /**
+         * Empty Constructor
+         */
     }
 }
