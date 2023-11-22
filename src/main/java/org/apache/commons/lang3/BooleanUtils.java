@@ -261,6 +261,7 @@ public class BooleanUtils {
      * @param bool  the Boolean to negate, may be null
      * @return the negated Boolean, or {@code null} if {@code null} input
      */
+    @javax.annotation.Nullable
     public static Boolean negate(final Boolean bool) {
         if (bool == null) {
             return null;
@@ -606,6 +607,7 @@ public class BooleanUtils {
      * @return Boolean.TRUE, Boolean.FALSE, or {@code null}
      * @throws IllegalArgumentException if no match
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final int value, final int trueValue, final int falseValue, final int nullValue) {
         if (value == trueValue) {
             return Boolean.TRUE;
@@ -638,6 +640,7 @@ public class BooleanUtils {
      * @return Boolean.TRUE if non-zero, Boolean.FALSE if zero,
      *  {@code null} if {@code null} input
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final Integer value) {
         if (value == null) {
             return null;
@@ -670,6 +673,7 @@ public class BooleanUtils {
      * @return Boolean.TRUE, Boolean.FALSE, or {@code null}
      * @throws IllegalArgumentException if no match
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final Integer value, final Integer trueValue, final Integer falseValue, final Integer nullValue) {
         if (value == null) {
             if (trueValue == null) {
@@ -728,6 +732,7 @@ public class BooleanUtils {
      * @param str  the String to check; upper and lower case are treated as the same
      * @return the Boolean value of the string, {@code null} if no match or {@code null} input
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final String str) {
         // Previously used equalsIgnoreCase, which was fast for interned 'true'.
         // Non interned 'true' matched 15 times slower.
@@ -849,6 +854,7 @@ public class BooleanUtils {
      *  or if {@code null} input and {@code nullString} is {@code null}
      * @throws IllegalArgumentException if the String doesn't match
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final String str, final String trueString, final String falseString, final String nullString) {
         if (str == null) {
             if (trueString == null) {
