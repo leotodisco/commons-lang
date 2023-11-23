@@ -199,7 +199,7 @@ public class CharSetUtils {
      * @return the modified String, {@code null} if null string input
      */
     public static String squeeze(final String str, final String... set) {
-        if (StringUtils.isEmpty(str) || deepEmpty(set)) {
+        if (shouldSkipSqueezing(str, set)) {
             return str;
         }
         final CharSet chars = CharSet.getInstance(set);
@@ -214,10 +214,10 @@ public class CharSetUtils {
         for (int i = 1; i < sz; i++) {
             ch = chrs[i];
             if (ch == lastChar) {
-                if (inChars != null && ch == inChars) {
+                if (shouldNotIncludeCharacter(inChars, ch)) {
                     continue;
                 }
-                if (notInChars == null || ch != notInChars) {
+                if (shouldIncludeCharacter(notInChars, ch)) {
                     if (chars.contains(ch)) {
                         inChars = ch;
                         continue;
@@ -231,6 +231,18 @@ public class CharSetUtils {
         return buffer.toString();
     }
 
+    private static boolean shouldSkipSqueezing(String str, String... set) {
+        return StringUtils.isEmpty(str) || deepEmpty(set);
+    }
+
+    private static boolean shouldNotIncludeCharacter(Character inChosenChars, char currentCharacter) {
+        return inChosenChars != null && currentCharacter == inChosenChars;
+    }
+
+    private static boolean shouldIncludeCharacter(Character notInChosenChars, char currentCharacter) {
+        return notInChosenChars == null || currentCharacter != notInChosenChars;
+    }
+
     /**
      * CharSetUtils instances should NOT be constructed in standard programming.
      * Instead, the class should be used as {@code CharSetUtils.evaluateSet(null);}.
@@ -239,5 +251,7 @@ public class CharSetUtils {
      * to operate.</p>
      */
     public CharSetUtils() {
+        //This constructor is public to permit tools that require a JavaBean instance
+        //to operate
     }
 }
