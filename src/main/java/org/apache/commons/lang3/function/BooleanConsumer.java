@@ -37,7 +37,7 @@ public interface BooleanConsumer {
      *
      * @return The NOP singleton.
      */
-    static BooleanConsumer getNop() {
+    static BooleanConsumer nop() {
         return NOP;
     }
 

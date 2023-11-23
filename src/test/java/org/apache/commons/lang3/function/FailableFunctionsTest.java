@@ -645,7 +645,7 @@ public class FailableFunctionsTest extends AbstractLangTest {
             t.setThrowable(th);
             t.test();
         };
-        final FailableBiConsumer<Testable<?, ?>, Throwable, Throwable> nop = FailableBiConsumer.getNop();
+        final FailableBiConsumer<Testable<?, ?>, Throwable, Throwable> nop = FailableBiConsumer.nop();
         Throwable e = assertThrows(OutOfMemoryError.class, () -> nop.andThen(failing).accept(testable, ERROR));
         assertSame(ERROR, e);
         e = assertThrows(OutOfMemoryError.class, () -> failing.andThen(nop).accept(testable, ERROR));
@@ -696,7 +696,7 @@ public class FailableFunctionsTest extends AbstractLangTest {
             throw new IOException();
         };
         final FailableBiFunction<Object, Integer, Integer, IOException> nopFailableBiFunction = FailableBiFunction
-            .getNop();
+            .nop();
         final FailableFunction<Object, Integer, IOException> nopFailableFunction = FailableFunction.nop();
         //
         assertThrows(IOException.class, () -> failingBiFunctionTest.andThen(failingFunction).apply(null, null));
@@ -778,7 +778,7 @@ public class FailableFunctionsTest extends AbstractLangTest {
             testable.setThrowable(th);
             testable.test();
         };
-        final FailableConsumer<Throwable, Throwable> nop = FailableConsumer.getNop();
+        final FailableConsumer<Throwable, Throwable> nop = FailableConsumer.nop();
         final Throwable e = assertThrows(OutOfMemoryError.class, () -> nop.andThen(failableConsumer).accept(ERROR));
         assertSame(ERROR, e);
         // Does not throw
@@ -896,18 +896,18 @@ public class FailableFunctionsTest extends AbstractLangTest {
 
     @Test
     public void testFailableBiFunctionNop() throws Throwable {
-        assertNull(FailableBiFunction.getNop().apply("Foo", "Bar"), "Expect NOP to return null");
+        assertNull(FailableBiFunction.nop().apply("Foo", "Bar"), "Expect NOP to return null");
     }
 
     @Test
     public void testFailableConsumerNop() throws Throwable {
         // Expect nothing thrown
-        FailableConsumer.getNop().accept("Foo");
+        FailableConsumer.nop().accept("Foo");
     }
 
     @Test
     public void testFailableDoubleFunctionNop() throws Throwable {
-        assertNull(FailableDoubleFunction.getNop().apply(Double.MAX_VALUE), "Expect NOP to return null");
+        assertNull(FailableDoubleFunction.nop().apply(Double.MAX_VALUE), "Expect NOP to return null");
     }
 
     @Test

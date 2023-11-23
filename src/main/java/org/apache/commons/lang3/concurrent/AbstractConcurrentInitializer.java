@@ -47,7 +47,7 @@ public abstract class AbstractConcurrentInitializer<T, E extends Exception> impl
         /**
          * Closer consumer called by {@link #close()}.
          */
-        private FailableConsumer<T, ? extends Exception> closer = FailableConsumer.getNop();
+        private FailableConsumer<T, ? extends Exception> closer = FailableConsumer.nop();
 
         /**
          * Initializer supplier called by {@link #initialize()}.
@@ -79,7 +79,7 @@ public abstract class AbstractConcurrentInitializer<T, E extends Exception> impl
          * @return this
          */
         public B setCloser(final FailableConsumer<T, ? extends Exception> closer) {
-            this.closer = closer != null ? closer : FailableConsumer.getNop();
+            this.closer = closer != null ? closer : FailableConsumer.nop();
             return asThis();
         }
 
@@ -110,7 +110,7 @@ public abstract class AbstractConcurrentInitializer<T, E extends Exception> impl
      * Constructs a new instance.
      */
     public AbstractConcurrentInitializer() {
-        this(FailableSupplier.nul(), FailableConsumer.getNop());
+        this(FailableSupplier.nul(), FailableConsumer.nop());
     }
 
     /**
