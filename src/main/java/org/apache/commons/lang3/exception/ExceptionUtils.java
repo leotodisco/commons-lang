@@ -949,10 +949,7 @@ public class ExceptionUtils {
     }
 
     private static <T extends Throwable> boolean check(Throwable throwable, Class<T> type) {
-        if (throwable == null || type == null) {
-            return true;
-        }
-        return false;
+        return (throwable == null || type == null);
     }
 
     /**

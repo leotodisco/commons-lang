@@ -1058,10 +1058,7 @@ public class StringUtils {
         final int searchLength = searchChars.length;
         final int csLast = csLength - 1;
         final int searchLast = searchLength - 1;
-        if (checkIfContainsAny(cs, searchChars, csLength, searchLength, searchLast, csLast)) {
-            return true;
-        }
-        return false;
+        return (checkIfContainsAny(cs, searchChars, csLength, searchLength, searchLast, csLast));
     }
 
     private static boolean checkIfContainsAny(CharSequence cs, char[] searchChars, int csLength, int searchLength, int searchLast, int csLast) {
@@ -1094,10 +1091,7 @@ public class StringUtils {
     }
 
     private static boolean checkIfEmptyCharSequence(CharSequence cs, char[] searchChars) {
-        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
-            return true;
-        }
-        return false;
+        return  (isEmpty(cs) || ArrayUtils.isEmpty(searchChars));
     }
 
     /**
