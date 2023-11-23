@@ -573,8 +573,10 @@ public class ExceptionUtils {
      * @return index of the {@code type} within throwables nested within the specified {@code throwable}
      */
     private static int indexOf(final Throwable throwable, final Class<? extends Throwable> type, int fromIndex, final boolean subclass) {
-        if (throwable == null || type == null) {
-            return NOT_FOUND;
+        //checks if thorawble and type are null
+        Integer notFound = checkThrowableAndType(throwable, type);
+        if (notFound != null) {
+            return notFound;
         }
         if (fromIndex < 0) {
             fromIndex = 0;
@@ -597,6 +599,13 @@ public class ExceptionUtils {
             }
         }
         return NOT_FOUND;
+    }
+
+    private static Integer checkThrowableAndType(Throwable throwable, Class<? extends Throwable> type) {
+        if (throwable == null || type == null) {
+            return NOT_FOUND;
+        }
+        return null;
     }
 
     /**
@@ -913,7 +922,7 @@ public class ExceptionUtils {
      * @return throwable of the {@code type} within throwables nested within the specified {@code throwable}
      */
     private static <T extends Throwable> T throwableOf(final Throwable throwable, final Class<T> type, int fromIndex, final boolean subclass) {
-        if (throwable == null || type == null) {
+        if (check(throwable, type)) {
             return null;
         }
         if (fromIndex < 0) {
@@ -937,6 +946,10 @@ public class ExceptionUtils {
             }
         }
         return null;
+    }
+
+    private static <T extends Throwable> boolean check(Throwable throwable, Class<T> type) {
+        return throwable == null || type == null;
     }
 
     /**
@@ -1098,5 +1111,8 @@ public class ExceptionUtils {
      */
     @Deprecated
     public ExceptionUtils() {
+        /**
+         * empty constructor
+         */
     }
 }

@@ -139,7 +139,7 @@ public class StringUtils {
     // Append:
     // String.concat about twice as fast as StringBuffer.append
     // (not sure who tested this)
-
+    private static final IllegalArgumentException nullStringsExc = new IllegalArgumentException("Strings must not be null");
     /**
      * A String for a space character.
      *
@@ -1051,32 +1051,47 @@ public class StringUtils {
      * @since 3.0 Changed signature from containsAny(String, char[]) to containsAny(CharSequence, char...)
      */
     public static boolean containsAny(final CharSequence cs, final char... searchChars) {
-        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
+        if (checkIfEmptyCharSequence(cs, searchChars)) {
             return false;
         }
         final int csLength = cs.length();
         final int searchLength = searchChars.length;
         final int csLast = csLength - 1;
         final int searchLast = searchLength - 1;
+        return checkIfContainsAny(cs, searchChars, csLength, searchLength, searchLast, csLast);
+    }
+
+    private static boolean checkIfContainsAny(CharSequence cs, char[] searchChars, int csLength, int searchLength, int searchLast, int csLast) {
         for (int i = 0; i < csLength; i++) {
             final char ch = cs.charAt(i);
-            for (int j = 0; j < searchLength; j++) {
-                if (searchChars[j] == ch) {
-                    if (!Character.isHighSurrogate(ch)) {
-                        // ch is in the Basic Multilingual Plane
-                        return true;
-                    }
-                    if (j == searchLast) {
-                        // missing low surrogate, fine, like String.indexOf(String)
-                        return true;
-                    }
-                    if (i < csLast && searchChars[j + 1] == cs.charAt(i + 1)) {
-                        return true;
-                    }
+            if (checkInLength(cs, searchChars, searchLength, searchLast, csLast, ch, i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean checkInLength(CharSequence cs, char[] searchChars, int searchLength, int searchLast, int csLast, char ch, int i) {
+        for (int j = 0; j < searchLength; j++) {
+            if (searchChars[j] == ch) {
+                if (!Character.isHighSurrogate(ch)) {
+                    // ch is in the Basic Multilingual Plane
+                    return true;
+                }
+                if (j == searchLast) {
+                    // missing low surrogate, fine, like String.indexOf(String)
+                    return true;
+                }
+                if (i < csLast && searchChars[j + 1] == cs.charAt(i + 1)) {
+                    return true;
                 }
             }
         }
         return false;
+    }
+
+    private static boolean checkIfEmptyCharSequence(CharSequence cs, char[] searchChars) {
+        return  isEmpty(cs) || ArrayUtils.isEmpty(searchChars);
     }
 
     /**
@@ -2132,7 +2147,7 @@ public class StringUtils {
     @Deprecated
     public static int getFuzzyDistance(final CharSequence term, final CharSequence query, final Locale locale) {
         if (term == null || query == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw nullStringsExc;
         }
         if (locale == null) {
             throw new IllegalArgumentException("Locale must not be null");
@@ -2281,7 +2296,7 @@ public class StringUtils {
         final double DEFAULT_SCALING_FACTOR = 0.1;
 
         if (first == null || second == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw nullStringsExc;
         }
 
         final int[] mtp = matches(first, second);
@@ -2332,7 +2347,7 @@ public class StringUtils {
     @Deprecated
     public static int getLevenshteinDistance(CharSequence s, CharSequence t) {
         if (s == null || t == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw nullStringsExc;
         }
 
         int n = s.length();
@@ -2423,7 +2438,7 @@ public class StringUtils {
     @Deprecated
     public static int getLevenshteinDistance(CharSequence s, CharSequence t, final int threshold) {
         if (s == null || t == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw nullStringsExc;
         }
         if (threshold < 0) {
             throw new IllegalArgumentException("Threshold must not be negative");
@@ -2753,13 +2768,22 @@ public class StringUtils {
      * @since 3.0 Changed signature from indexOfAny(String, char[]) to indexOfAny(CharSequence, char...)
      */
     public static int indexOfAny(final CharSequence cs, final char... searchChars) {
-        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
-            return INDEX_NOT_FOUND;
+        Integer indexNotFound = checkEmpty(cs, searchChars);
+        if (indexNotFound != null) {
+            return indexNotFound;
         }
         final int csLen = cs.length();
         final int csLast = csLen - 1;
         final int searchLen = searchChars.length;
         final int searchLast = searchLen - 1;
+        Integer i = findPosition(cs, searchChars, csLen, searchLen, csLast, searchLast);
+        if (i != null) {
+            return i;
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    private static Integer findPosition(CharSequence cs, char[] searchChars, int csLen, int searchLen, int csLast, int searchLast) {
         for (int i = 0; i < csLen; i++) {
             final char ch = cs.charAt(i);
             for (int j = 0; j < searchLen; j++) {
@@ -2774,7 +2798,14 @@ public class StringUtils {
                 }
             }
         }
-        return INDEX_NOT_FOUND;
+        return null;
+    }
+
+    private static Integer checkEmpty(CharSequence cs, char[] searchChars) {
+        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
+            return INDEX_NOT_FOUND;
+        }
+        return null;
     }
 
     /**
@@ -2885,8 +2916,9 @@ public class StringUtils {
      * @since 3.0 Changed signature from indexOfAnyBut(String, char[]) to indexOfAnyBut(CharSequence, char...)
      */
     public static int indexOfAnyBut(final CharSequence cs, final char... searchChars) {
-        if (isEmpty(cs) || ArrayUtils.isEmpty(searchChars)) {
-            return INDEX_NOT_FOUND;
+        Integer indexNotFound = checkEmpty(cs, searchChars);
+        if (indexNotFound != null) {
+            return indexNotFound;
         }
         final int csLen = cs.length();
         final int csLast = csLen - 1;
@@ -3020,6 +3052,18 @@ public class StringUtils {
         }
 
         // find the position with the first difference across all strings
+        int firstDiff = getFirstDiff(css, shortestStrLen, arrayLen);
+
+        if (firstDiff == -1 && shortestStrLen != longestStrLen) {
+            // we compared all of the characters up to the length of the
+            // shortest string and didn't find a match, but the string lengths
+            // vary, so return the length of the shortest string.
+            return shortestStrLen;
+        }
+        return firstDiff;
+    }
+
+    private static int getFirstDiff(CharSequence[] css, int shortestStrLen, int arrayLen) {
         int firstDiff = -1;
         for (int stringPos = 0; stringPos < shortestStrLen; stringPos++) {
             final char comparisonChar = css[0].charAt(stringPos);
@@ -3032,13 +3076,6 @@ public class StringUtils {
             if (firstDiff != -1) {
                 break;
             }
-        }
-
-        if (firstDiff == -1 && shortestStrLen != longestStrLen) {
-            // we compared all of the characters up to the length of the
-            // shortest string and didn't find a match, but the string lengths
-            // vary, so return the length of the shortest string.
-            return shortestStrLen;
         }
         return firstDiff;
     }
@@ -5342,6 +5379,7 @@ public class StringUtils {
     private static int[] matches(final CharSequence first, final CharSequence second) {
         final CharSequence max;
         final CharSequence min;
+
         if (first.length() > second.length()) {
             max = first;
             min = second;
@@ -5354,17 +5392,7 @@ public class StringUtils {
         Arrays.fill(matchIndexes, -1);
         final boolean[] matchFlags = new boolean[max.length()];
         int matches = 0;
-        for (int mi = 0; mi < min.length(); mi++) {
-            final char c1 = min.charAt(mi);
-            for (int xi = Math.max(mi - range, 0), xn = Math.min(mi + range + 1, max.length()); xi < xn; xi++) {
-                if (!matchFlags[xi] && c1 == max.charAt(xi)) {
-                    matchIndexes[mi] = xi;
-                    matchFlags[xi] = true;
-                    matches++;
-                    break;
-                }
-            }
-        }
+        matches = getMatches(min, range, max, matchFlags, matchIndexes, matches);
         final char[] ms1 = new char[matches];
         final char[] ms2 = new char[matches];
         for (int i = 0, si = 0; i < min.length(); i++) {
@@ -5380,19 +5408,44 @@ public class StringUtils {
             }
         }
         int transpositions = 0;
-        for (int mi = 0; mi < ms1.length; mi++) {
-            if (ms1[mi] != ms2[mi]) {
-                transpositions++;
-            }
-        }
+        transpositions = getTranspositions(ms1, ms2, transpositions);
         int prefix = 0;
+        prefix = getPrefix(first, second, min, prefix);
+        return new int[] { matches, transpositions / 2, prefix, max.length() };
+    }
+
+    private static int getPrefix(CharSequence first, CharSequence second, CharSequence min, int prefix) {
         for (int mi = 0; mi < min.length(); mi++) {
             if (first.charAt(mi) != second.charAt(mi)) {
                 break;
             }
             prefix++;
         }
-        return new int[] { matches, transpositions / 2, prefix, max.length() };
+        return prefix;
+    }
+
+    private static int getTranspositions(char[] ms1, char[] ms2, int transpositions) {
+        for (int mi = 0; mi < ms1.length; mi++) {
+            if (ms1[mi] != ms2[mi]) {
+                transpositions++;
+            }
+        }
+        return transpositions;
+    }
+
+    private static int getMatches(CharSequence min, int range, CharSequence max, boolean[] matchFlags, int[] matchIndexes, int matches) {
+        for (int mi = 0; mi < min.length(); mi++) {
+            final char c1 = min.charAt(mi);
+            for (int xi = Math.max(mi - range, 0), xn = Math.min(mi + range + 1, max.length()); xi < xn; xi++) {
+                if (!matchFlags[xi] && c1 == max.charAt(xi)) {
+                    matchIndexes[mi] = xi;
+                    matchFlags[xi] = true;
+                    matches++;
+                    break;
+                }
+            }
+        }
+        return matches;
     }
 
     /**
@@ -9553,6 +9606,9 @@ public class StringUtils {
      * instance to operate.</p>
      */
     public StringUtils() {
+        /**
+         * Empty Constructor
+         */
     }
 
 }
