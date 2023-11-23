@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3.exception;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * @see ContextedRuntimeException
  * @since 3.0
  */
-public interface ExceptionContext {
+public interface ExceptionContext extends Serializable {
 
     /**
      * Adds a contextual label-value pair into this context.

@@ -47,7 +47,7 @@ public interface FailableBiFunction<T, U, R, E extends Throwable> {
      * @return The NOP singleton.
      */
     @SuppressWarnings("unchecked")
-    static <T, U, R, E extends Throwable> FailableBiFunction<T, U, R, E> nop() {
+    static <T, U, R, E extends Throwable> FailableBiFunction<T, U, R, E> getNop() {
         return NOP;
     }
 
