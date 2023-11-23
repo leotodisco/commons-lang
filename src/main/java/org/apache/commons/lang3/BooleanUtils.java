@@ -66,6 +66,8 @@ public class BooleanUtils {
      */
     public static final String ON = "on";
 
+    private static final String ARRAY = "array";
+
     /**
      * The true String {@code "true"}.
      *
@@ -99,7 +101,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static boolean and(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         for (final boolean element : array) {
             if (!element) {
                 return false;
@@ -131,7 +133,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static Boolean and(final Boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         return and(ArrayUtils.toPrimitive(array)) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -259,6 +261,7 @@ public class BooleanUtils {
      * @param bool  the Boolean to negate, may be null
      * @return the negated Boolean, or {@code null} if {@code null} input
      */
+    @javax.annotation.Nullable
     public static Boolean negate(final Boolean bool) {
         if (bool == null) {
             return null;
@@ -280,7 +283,7 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if {@code array} is empty.
      */
     public static boolean oneHot(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         boolean result = false;
         for (final boolean element: array) {
             if (element) {
@@ -333,7 +336,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static boolean or(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         for (final boolean element : array) {
             if (element) {
                 return true;
@@ -366,7 +369,7 @@ public class BooleanUtils {
      * @since 3.0.1
      */
     public static Boolean or(final Boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         return or(ArrayUtils.toPrimitive(array)) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -604,6 +607,7 @@ public class BooleanUtils {
      * @return Boolean.TRUE, Boolean.FALSE, or {@code null}
      * @throws IllegalArgumentException if no match
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final int value, final int trueValue, final int falseValue, final int nullValue) {
         if (value == trueValue) {
             return Boolean.TRUE;
@@ -636,6 +640,7 @@ public class BooleanUtils {
      * @return Boolean.TRUE if non-zero, Boolean.FALSE if zero,
      *  {@code null} if {@code null} input
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final Integer value) {
         if (value == null) {
             return null;
@@ -668,6 +673,7 @@ public class BooleanUtils {
      * @return Boolean.TRUE, Boolean.FALSE, or {@code null}
      * @throws IllegalArgumentException if no match
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final Integer value, final Integer trueValue, final Integer falseValue, final Integer nullValue) {
         if (value == null) {
             if (trueValue == null) {
@@ -726,6 +732,7 @@ public class BooleanUtils {
      * @param str  the String to check; upper and lower case are treated as the same
      * @return the Boolean value of the string, {@code null} if no match or {@code null} input
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final String str) {
         // Previously used equalsIgnoreCase, which was fast for interned 'true'.
         // Non interned 'true' matched 15 times slower.
@@ -847,6 +854,7 @@ public class BooleanUtils {
      *  or if {@code null} input and {@code nullString} is {@code null}
      * @throws IllegalArgumentException if the String doesn't match
      */
+    @javax.annotation.Nullable
     public static Boolean toBooleanObject(final String str, final String trueString, final String falseString, final String nullString) {
         if (str == null) {
             if (trueString == null) {
@@ -1171,7 +1179,7 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if {@code array} is empty.
      */
     public static boolean xor(final boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         // false if the neutral element of the xor operator
         boolean result = false;
         for (final boolean element : array) {
@@ -1201,7 +1209,7 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if {@code array} is empty.
      */
     public static Boolean xor(final Boolean... array) {
-        ObjectUtils.requireNonEmpty(array, "array");
+        ObjectUtils.requireNonEmpty(array, ARRAY);
         return xor(ArrayUtils.toPrimitive(array)) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -1213,6 +1221,8 @@ public class BooleanUtils {
      * to operate.</p>
      */
     public BooleanUtils() {
+        //This constructor is public to permit tools that require a JavaBean instance
+        //to operate.
     }
 
 }

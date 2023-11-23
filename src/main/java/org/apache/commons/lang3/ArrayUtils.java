@@ -636,6 +636,18 @@ public class ArrayUtils {
     }
 
     /**
+     * Throws an IndexOutOfBoundsException with a message indicating the provided index
+     * and length.
+     *
+     * @param index the index that caused the exception
+     * @param length the length of the array or data structure involved
+     * @throws IndexOutOfBoundsException with a detailed message about the index and length
+     */
+    private static void throwIndexOutOfBoundException(int index, int length){
+        throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+    }
+
+    /**
      * Underlying implementation of add(array, index, element) methods.
      * The last parameter is the class, which may not equal element.getClass
      * for primitives.
@@ -649,7 +661,7 @@ public class ArrayUtils {
     private static Object add(final Object array, final int index, final Object element, final Class<?> clazz) {
         if (array == null) {
             if (index != 0) {
-                throw new IndexOutOfBoundsException("Index: " + index + ", Length: 0");
+                throwIndexOutOfBoundException(index, 0);
             }
             final Object joinedArray = Array.newInstance(clazz, 1);
             Array.set(joinedArray, 0, element);
@@ -657,7 +669,7 @@ public class ArrayUtils {
         }
         final int length = Array.getLength(array);
         if (index > length || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+            throwIndexOutOfBoundException(index, length);
         }
         final Object result = Array.newInstance(clazz, length + 1);
         System.arraycopy(array, 0, result, 0, index);
@@ -2788,7 +2800,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final boolean[] result = new boolean[array.length + values.length];
@@ -2830,7 +2842,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final byte[] result = new byte[array.length + values.length];
@@ -2872,7 +2884,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final char[] result = new char[array.length + values.length];
@@ -2914,7 +2926,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final double[] result = new double[array.length + values.length];
@@ -2956,7 +2968,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final float[] result = new float[array.length + values.length];
@@ -2998,7 +3010,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final int[] result = new int[array.length + values.length];
@@ -3040,7 +3052,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final long[] result = new long[array.length + values.length];
@@ -3082,7 +3094,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final short[] result = new short[array.length + values.length];
@@ -3134,7 +3146,7 @@ public class ArrayUtils {
             return clone(array);
         }
         if (index < 0 || index > array.length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + array.length);
+            throwIndexOutOfBoundException(index, array.length);
         }
 
         final Class<T> type = getComponentType(array);
@@ -4935,7 +4947,7 @@ public class ArrayUtils {
     private static Object remove(final Object array, final int index) {
         final int length = getLength(array);
         if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+            throwIndexOutOfBoundException(index, length);
         }
 
         final Object result = Array.newInstance(array.getClass().getComponentType(), length - 1);
@@ -5301,50 +5313,64 @@ public class ArrayUtils {
      */
     // package protected for access by unit tests
     static Object removeAll(final Object array, final int... indices) {
-        if (array == null) {//if array is null, throw a IndexOutOfBoundException, this prevents a NullPointerException
+        if (array == null) {
             throw new IndexOutOfBoundsException("Array is null");
         }
 
         final int length = getLength(array);
-        int diff = 0; // number of distinct indexes, i.e. number of entries that will be removed
-        final int[] clonedIndices = ArraySorter.sort(clone(indices));
+        int[] sortedIndices = ArraySorter.sort(clone(indices));
 
-        // identify length of result array
-        if (isNotEmpty(clonedIndices)) {
-            int i = clonedIndices.length;
-            int prevIndex = length;
-            while (--i >= 0) {
-                final int index = clonedIndices[i];
-                if (index < 0 || index >= length) {
-                    throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
-                }
-                if (index >= prevIndex) {
-                    continue;
-                }
-                diff++;
+        validateIndices(length, sortedIndices);
+
+        int numberOfDistinctIndexes = countDistinctIndices(sortedIndices, length);
+
+        return createResultArray(array, length, numberOfDistinctIndexes, sortedIndices);
+    }
+
+    private static void validateIndices(int length, int[] sortedIndices) {
+        for (int index : sortedIndices) {
+            if (index < 0 || index >= length) {
+                throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+            }
+        }
+    }
+
+    private static int countDistinctIndices(int[] sortedIndices, int length) {
+        int distinctIndexCount = 0;
+        int prevIndex = length;
+
+        for (int i = sortedIndices.length - 1; i >= 0; i--) {
+            int index = sortedIndices[i];
+
+            if (index < prevIndex) {
+                distinctIndexCount++;
                 prevIndex = index;
             }
         }
 
-        // create result array
-        final Object result = Array.newInstance(array.getClass().getComponentType(), length - diff);
-        if (diff < length) {
-            int end = length; // index just after last copy
-            int dest = length - diff; // number of entries so far not copied
-            for (int i = clonedIndices.length - 1; i >= 0; i--) {
-                final int index = clonedIndices[i];
-                if (end - index > 1) { // same as (cp > 0)
-                    final int cp = end - index - 1;
-                    dest -= cp;
-                    System.arraycopy(array, index + 1, result, dest, cp);
-                    // After this copy, we still have room for dest items.
-                }
-                end = index;
+        return distinctIndexCount;
+    }
+
+    private static Object createResultArray(Object array, int length, int numberOfDistinctIndexes, int[] sortedIndices) {
+        int dest = length - numberOfDistinctIndexes;
+        Object result = Array.newInstance(array.getClass().getComponentType(), dest);
+
+        int end = length;
+        for (int i = sortedIndices.length - 1; i >= 0; i--) {
+            int index = sortedIndices[i];
+            int cp = end - index - 1;
+
+            if (cp > 0) {
+                dest -= cp;
+                System.arraycopy(array, index + 1, result, dest, cp);
             }
-            if (end > 0) {
-                System.arraycopy(array, 0, result, 0, end);
-            }
+            end = index;
         }
+
+        if (end > 0) {
+            System.arraycopy(array, 0, result, 0, end);
+        }
+
         return result;
     }
 
@@ -9645,5 +9671,7 @@ public class ArrayUtils {
      * </p>
      */
     public ArrayUtils() {
+        //this constructor is public to permit tools that require a JavaBean instance
+        //to operate.
     }
 }
