@@ -152,14 +152,9 @@ public class CharSequenceUtils {
             return NOT_FOUND;
         }
         if (searchChar instanceof String) {
-            if (cs instanceof String) {
-                return ((String) cs).lastIndexOf((String) searchChar, start);
-            }
-            if (cs instanceof StringBuilder) {
-                return ((StringBuilder) cs).lastIndexOf((String) searchChar, start);
-            }
-            if (cs instanceof StringBuffer) {
-                return ((StringBuffer) cs).lastIndexOf((String) searchChar, start);
+            Integer cs1 = lastIndexOfConverted(cs, searchChar, start);
+            if (cs1 != null) {
+                return cs1;
             }
         }
 
@@ -179,14 +174,9 @@ public class CharSequenceUtils {
         }
 
         if (len2 <= TO_STRING_LIMIT) {
-            if (cs instanceof String) {
-                return ((String) cs).lastIndexOf(searchChar.toString(), start);
-            }
-            if (cs instanceof StringBuilder) {
-                return ((StringBuilder) cs).lastIndexOf(searchChar.toString(), start);
-            }
-            if (cs instanceof StringBuffer) {
-                return ((StringBuffer) cs).lastIndexOf(searchChar.toString(), start);
+            Integer cs1 = lastIndexOfConverted(cs, searchChar, start);
+            if (cs1 != null) {
+                return cs1;
             }
         }
 
@@ -194,7 +184,12 @@ public class CharSequenceUtils {
             start = len1 - len2;
         }
 
-        final char char0 = searchChar.charAt(0);
+        return indexOfBackward(cs, searchChar, start);
+    }
+
+    private static int indexOfBackward(CharSequence cs, CharSequence searchChar, int start) {
+        char char0 = searchChar.charAt(0);
+        int len = searchChar.length();
 
         int i = start;
         while (true) {
@@ -204,7 +199,7 @@ public class CharSequenceUtils {
                     return NOT_FOUND;
                 }
             }
-            if (checkLaterThan1(cs, searchChar, len2, i)) {
+            if (checkLaterThan1(cs, searchChar, len, i)) {
                 return i;
             }
             i--;
@@ -212,6 +207,19 @@ public class CharSequenceUtils {
                 return NOT_FOUND;
             }
         }
+    }
+
+    private static Integer lastIndexOfConverted(CharSequence cs, CharSequence searchChar, int start) {
+        if (cs instanceof String) {
+            return ((String) cs).lastIndexOf(searchChar.toString(), start);
+        }
+        if (cs instanceof StringBuilder) {
+            return ((StringBuilder) cs).lastIndexOf(searchChar.toString(), start);
+        }
+        if (cs instanceof StringBuffer) {
+            return ((StringBuffer) cs).lastIndexOf(searchChar.toString(), start);
+        }
+        return null;
     }
 
     /**
@@ -263,6 +271,11 @@ public class CharSequenceUtils {
         }
         //supplementary characters (LANG1300)
         //NOTE - we must do a forward traversal for this to avoid duplicating code points
+        return lastIndexOfUnicode(cs, searchChar, start);
+    }
+
+    private static int lastIndexOfUnicode(CharSequence cs, int searchChar, int start) {
+        int sz = cs.length();
         if (searchChar <= Character.MAX_CODE_POINT) {
             final char[] chars = Character.toChars(searchChar);
             //make sure it's not the last index
@@ -385,5 +398,7 @@ public class CharSequenceUtils {
      * instance to operate.</p>
      */
     public CharSequenceUtils() {
+        //This constructor is public to permit tools that require a JavaBean
+        //instance to operate.
     }
 }

@@ -71,6 +71,8 @@ public class CharUtils {
      * to operate.</p>
      */
     public CharUtils() {
+        //This constructor is public and empty to permit tools that require a JavaBean instance
+        //to operate.
     }
 
     /**
