@@ -514,6 +514,11 @@ public class EqualsBuilder implements Builder<Boolean> {
             return this;
         }
 
+        appendMethod(lhs, rhs, testClass, lhsClass, rhsClass);
+        return this;
+    }
+
+    private void appendMethod(Object lhs, Object rhs, Class<?> testClass, Class<?> lhsClass, Class<?> rhsClass) {
         try {
             if (testClass.isArray()) {
                 append(lhs, rhs);
@@ -536,7 +541,6 @@ public class EqualsBuilder implements Builder<Boolean> {
             // exception and we know that the objects are not equal.
             isEquals = false;
         }
-        return this;
     }
 
     /**

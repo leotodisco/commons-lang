@@ -81,6 +81,9 @@ public class Validate {
      * Constructor. This class should not normally be instantiated.
      */
     public Validate() {
+        /**
+         *  Empty constructor
+         */
     }
 
     /**

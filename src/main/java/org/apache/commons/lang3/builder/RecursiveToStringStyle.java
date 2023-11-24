@@ -63,6 +63,9 @@ public class RecursiveToStringStyle extends ToStringStyle {
      * Constructor.
      */
     public RecursiveToStringStyle() {
+        /**
+         * Empty Constructor
+         */
     }
 
     @Override
