@@ -36,7 +36,7 @@ public class MutableObject<T> implements Mutable<T>, Serializable {
     private static final long serialVersionUID = 86241875189L;
 
     /** The mutable value. */
-    private T value;
+    private transient T value;
 
     /**
      * Constructs a new MutableObject with the default value of {@code null}.

@@ -6690,15 +6690,7 @@ public class StringUtils {
         // let me know if there are performance requests, we can create a harness to measure
 
         // if recursing, this shouldn't be less than 0
-        if (timeToLive < 0) {
-            final Set<String> searchSet = new HashSet<>(Arrays.asList(searchList));
-            final Set<String> replacementSet = new HashSet<>(Arrays.asList(replacementList));
-            searchSet.retainAll(replacementSet);
-            if (!searchSet.isEmpty()) {
-                throw new IllegalStateException("Aborting to protect against StackOverflowError - " +
-                        "output of one loop is the input of another");
-            }
-        }
+        shortCircuitCheck(searchList, replacementList, timeToLive);
 
         if (isEmpty(text) || ArrayUtils.isEmpty(searchList) || ArrayUtils.isEmpty(replacementList) || ArrayUtils.isNotEmpty(searchList) && timeToLive == -1) {
             return text;
@@ -6806,6 +6798,18 @@ public class StringUtils {
         }
 
         return replaceEach(result, searchList, replacementList, repeat, timeToLive - 1);
+    }
+
+    private static void shortCircuitCheck(String[] searchList, String[] replacementList, int timeToLive) {
+        if (timeToLive < 0) {
+            final Set<String> searchSet = new HashSet<>(Arrays.asList(searchList));
+            final Set<String> replacementSet = new HashSet<>(Arrays.asList(replacementList));
+            searchSet.retainAll(replacementSet);
+            if (!searchSet.isEmpty()) {
+                throw new IllegalStateException("Aborting to protect against StackOverflowError - " +
+                        "output of one loop is the input of another");
+            }
+        }
     }
 
     /**

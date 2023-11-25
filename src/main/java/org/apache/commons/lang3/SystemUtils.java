@@ -1201,6 +1201,7 @@ public class SystemUtils {
      */
     public static final boolean IS_OS_MAC = getOsMatchesName("Mac");
 
+    public static final String MAC_OS_X = "Mac OS X";
     /**
      * Is {@code true} if this is Mac.
      *
@@ -1213,7 +1214,7 @@ public class SystemUtils {
      *
      * @since 2.0
      */
-    public static final boolean IS_OS_MAC_OSX = getOsMatchesName("Mac OS X");
+    public static final boolean IS_OS_MAC_OSX = getOsMatchesName(MAC_OS_X);
 
     /**
      * Is {@code true} if this is Mac OS X Cheetah.
@@ -1227,7 +1228,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_CHEETAH = getOsMatches("Mac OS X", "10.0");
+    public static final boolean IS_OS_MAC_OSX_CHEETAH = getOsMatches(MAC_OS_X, "10.0");
 
     /**
      * Is {@code true} if this is Mac OS X Puma.
@@ -1241,7 +1242,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_PUMA = getOsMatches("Mac OS X", "10.1");
+    public static final boolean IS_OS_MAC_OSX_PUMA = getOsMatches(MAC_OS_X, "10.1");
 
     /**
      * Is {@code true} if this is Mac OS X Jaguar.
@@ -1255,7 +1256,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_JAGUAR = getOsMatches("Mac OS X", "10.2");
+    public static final boolean IS_OS_MAC_OSX_JAGUAR = getOsMatches(MAC_OS_X, "10.2");
 
     /**
      * Is {@code true} if this is Mac OS X Panther.
@@ -1269,7 +1270,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_PANTHER = getOsMatches("Mac OS X", "10.3");
+    public static final boolean IS_OS_MAC_OSX_PANTHER = getOsMatches(MAC_OS_X, "10.3");
 
     /**
      * Is {@code true} if this is Mac OS X Tiger.
@@ -1283,7 +1284,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_TIGER = getOsMatches("Mac OS X", "10.4");
+    public static final boolean IS_OS_MAC_OSX_TIGER = getOsMatches(MAC_OS_X, "10.4");
 
     /**
      * Is {@code true} if this is Mac OS X Leopard.
@@ -1297,7 +1298,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_LEOPARD = getOsMatches("Mac OS X", "10.5");
+    public static final boolean IS_OS_MAC_OSX_LEOPARD = getOsMatches(MAC_OS_X, "10.5");
 
     /**
      * Is {@code true} if this is Mac OS X Snow Leopard.
@@ -1311,7 +1312,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_SNOW_LEOPARD = getOsMatches("Mac OS X", "10.6");
+    public static final boolean IS_OS_MAC_OSX_SNOW_LEOPARD = getOsMatches(MAC_OS_X, "10.6");
 
     /**
      * Is {@code true} if this is Mac OS X Lion.
@@ -1325,7 +1326,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_LION = getOsMatches("Mac OS X", "10.7");
+    public static final boolean IS_OS_MAC_OSX_LION = getOsMatches(MAC_OS_X, "10.7");
 
     /**
      * Is {@code true} if this is Mac OS X Mountain Lion.
@@ -1339,7 +1340,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_MOUNTAIN_LION = getOsMatches("Mac OS X", "10.8");
+    public static final boolean IS_OS_MAC_OSX_MOUNTAIN_LION = getOsMatches(MAC_OS_X, "10.8");
 
     /**
      * Is {@code true} if this is Mac OS X Mavericks.
@@ -1353,7 +1354,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_MAVERICKS = getOsMatches("Mac OS X", "10.9");
+    public static final boolean IS_OS_MAC_OSX_MAVERICKS = getOsMatches(MAC_OS_X, "10.9");
 
     /**
      * Is {@code true} if this is Mac OS X Yosemite.
@@ -1367,7 +1368,7 @@ public class SystemUtils {
      *
      * @since 3.4
      */
-    public static final boolean IS_OS_MAC_OSX_YOSEMITE = getOsMatches("Mac OS X", "10.10");
+    public static final boolean IS_OS_MAC_OSX_YOSEMITE = getOsMatches(MAC_OS_X, "10.10");
 
     /**
      * Is {@code true} if this is Mac OS X El Capitan.
@@ -1381,7 +1382,7 @@ public class SystemUtils {
      *
      * @since 3.5
      */
-    public static final boolean IS_OS_MAC_OSX_EL_CAPITAN = getOsMatches("Mac OS X", "10.11");
+    public static final boolean IS_OS_MAC_OSX_EL_CAPITAN = getOsMatches(MAC_OS_X, "10.11");
 
     /**
      * Is {@code true} if this is Mac OS X Sierra.
@@ -1395,7 +1396,7 @@ public class SystemUtils {
      *
      * @since 3.12.0
      */
-    public static final boolean IS_OS_MAC_OSX_SIERRA = getOsMatches("Mac OS X", "10.12");
+    public static final boolean IS_OS_MAC_OSX_SIERRA = getOsMatches(MAC_OS_X, "10.12");
 
     /**
      * Is {@code true} if this is Mac OS X High Sierra.
@@ -1409,7 +1410,7 @@ public class SystemUtils {
      *
      * @since 3.12.0
      */
-    public static final boolean IS_OS_MAC_OSX_HIGH_SIERRA = getOsMatches("Mac OS X", "10.13");
+    public static final boolean IS_OS_MAC_OSX_HIGH_SIERRA = getOsMatches(MAC_OS_X, "10.13");
 
     /**
      * Is {@code true} if this is Mac OS X Mojave.
@@ -1423,7 +1424,7 @@ public class SystemUtils {
      *
      * @since 3.12.0
      */
-    public static final boolean IS_OS_MAC_OSX_MOJAVE = getOsMatches("Mac OS X", "10.14");
+    public static final boolean IS_OS_MAC_OSX_MOJAVE = getOsMatches(MAC_OS_X, "10.14");
 
     /**
      * Is {@code true} if this is Mac OS X Catalina.
@@ -1437,7 +1438,7 @@ public class SystemUtils {
      *
      * @since 3.12.0
      */
-    public static final boolean IS_OS_MAC_OSX_CATALINA = getOsMatches("Mac OS X", "10.15");
+    public static final boolean IS_OS_MAC_OSX_CATALINA = getOsMatches(MAC_OS_X, "10.15");
 
     /**
      * Is {@code true} if this is Mac OS X Big Sur.
@@ -1451,7 +1452,7 @@ public class SystemUtils {
      *
      * @since 3.12.0
      */
-    public static final boolean IS_OS_MAC_OSX_BIG_SUR = getOsMatches("Mac OS X", "11");
+    public static final boolean IS_OS_MAC_OSX_BIG_SUR = getOsMatches(MAC_OS_X, "11");
 
     /**
      * Is {@code true} if this is Mac OS X Monterey.
@@ -1464,7 +1465,7 @@ public class SystemUtils {
      * </p>
      * @since 3.13.0
      */
-    public static final boolean IS_OS_MAC_OSX_MONTEREY = getOsMatches("Mac OS X", "12");
+    public static final boolean IS_OS_MAC_OSX_MONTEREY = getOsMatches(MAC_OS_X, "12");
 
     /**
      * Is {@code true} if this is Mac OS X Ventura.
@@ -1477,7 +1478,7 @@ public class SystemUtils {
      * </p>
      * @since 3.13.0
      */
-    public static final boolean IS_OS_MAC_OSX_VENTURA = getOsMatches("Mac OS X", "13");
+    public static final boolean IS_OS_MAC_OSX_VENTURA = getOsMatches(MAC_OS_X, "13");
 
     /**
      * Is {@code true} if this is FreeBSD.
@@ -2154,6 +2155,9 @@ public class SystemUtils {
      * </p>
      */
     public SystemUtils() {
+        /**
+         * Empty constructor
+         */
     }
 
 }

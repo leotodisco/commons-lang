@@ -84,6 +84,7 @@ public class NumberUtils {
      * @since 3.12.0
      */
     public static final Long LONG_INT_MIN_VALUE = Long.valueOf(Integer.MIN_VALUE);
+    public static final String IS_NOT_A_VALID_NUMBER = " is not a valid number.";
 
 
     /**
@@ -94,6 +95,9 @@ public class NumberUtils {
      * to operate.</p>
      */
     public NumberUtils() {
+        /**
+         * Empty constructor
+         */
     }
 
     /**
@@ -708,7 +712,7 @@ public class NumberUtils {
         if (decPos > -1) { // there is a decimal point
             if (expPos > -1) { // there is an exponent
                 if (expPos < decPos || expPos > length) { // prevents double exponent causing IOOBE
-                    throw new NumberFormatException(str + " is not a valid number.");
+                    throw new NumberFormatException(str + IS_NOT_A_VALID_NUMBER);
                 }
                 dec = str.substring(decPos + 1, expPos);
             } else {
@@ -719,7 +723,7 @@ public class NumberUtils {
         } else {
             if (expPos > -1) {
                 if (expPos > length) { // prevents double exponent causing IOOBE
-                    throw new NumberFormatException(str + " is not a valid number.");
+                    throw new NumberFormatException(str + IS_NOT_A_VALID_NUMBER);
                 }
                 mant = getMantissa(str, expPos);
             } else {
@@ -750,7 +754,7 @@ public class NumberUtils {
                         return createBigInteger(numeric);
 
                     }
-                    throw new NumberFormatException(str + " is not a valid number.");
+                    throw new NumberFormatException(str + IS_NOT_A_VALID_NUMBER);
                 case 'f' :
                 case 'F' :
                     try {
@@ -782,7 +786,7 @@ public class NumberUtils {
                     }
                     //$FALL-THROUGH$
                 default :
-                    throw new NumberFormatException(str + " is not a valid number.");
+                    throw new NumberFormatException(str + IS_NOT_A_VALID_NUMBER);
 
             }
         }

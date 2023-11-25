@@ -2074,6 +2074,7 @@ public abstract class ToStringStyle implements Serializable {
      */
     private static final class NoFieldNameToStringStyle extends ToStringStyle {
 
+
         private static final long serialVersionUID = 1L;
 
         /**
@@ -2242,6 +2243,8 @@ public abstract class ToStringStyle implements Serializable {
         private static final long serialVersionUID = 1L;
 
         private static final String FIELD_NAME_QUOTE = "\"";
+        public static final String FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE = "Field names are mandatory when using JsonToStringStyle";
+        public static final String FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE = "FullDetail must be true when using JsonToStringStyle";
 
         /**
          * Constructor.
@@ -2278,11 +2281,10 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
-                throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                throw new UnsupportedOperationException(FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2294,11 +2296,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                       FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2310,11 +2312,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                       FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2326,11 +2328,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2342,11 +2344,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2358,11 +2360,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2374,11 +2376,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2390,11 +2392,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2406,11 +2408,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, array, fullDetail);
@@ -2422,11 +2424,11 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
             if (!isFullDetail(fullDetail)) {
                 throw new UnsupportedOperationException(
-                        "FullDetail must be true when using JsonToStringStyle");
+                        FULL_DETAIL_MUST_BE_TRUE_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.append(buffer, fieldName, value, fullDetail);
@@ -2495,11 +2497,7 @@ public abstract class ToStringStyle implements Serializable {
                         }
                         appendFieldStart(buffer, keyStr);
                         final Object value = entry.getValue();
-                        if (value == null) {
-                            appendNullText(buffer, keyStr);
-                        } else {
-                            appendInternal(buffer, keyStr, value, true);
-                        }
+                        appendMethod(buffer, value, keyStr);
                     }
                 }
 
@@ -2508,6 +2506,14 @@ public abstract class ToStringStyle implements Serializable {
             }
 
             buffer.append(map);
+        }
+
+        private void appendMethod(StringBuffer buffer, Object value, String keyStr) {
+            if (value == null) {
+                appendNullText(buffer, keyStr);
+            } else {
+                appendInternal(buffer, keyStr, value, true);
+            }
         }
 
         private boolean isJsonArray(final String valueAsString) {
@@ -2535,7 +2541,7 @@ public abstract class ToStringStyle implements Serializable {
 
             if (fieldName == null) {
                 throw new UnsupportedOperationException(
-                        "Field names are mandatory when using JsonToStringStyle");
+                        FIELD_NAMES_ARE_MANDATORY_WHEN_USING_JSON_TO_STRING_STYLE);
             }
 
             super.appendFieldStart(buffer, FIELD_NAME_QUOTE + StringEscapeUtils.escapeJson(fieldName)
