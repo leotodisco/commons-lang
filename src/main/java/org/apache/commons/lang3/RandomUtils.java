@@ -36,6 +36,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Deprecated
 public class RandomUtils {
 
+    private static final String VALIDATEMESSAGE1 = "Start value must be smaller or equal to end value.";
+    private static final String VALIDATEMESSAGE2 = "Both range values must be non-negative.";
     /**
      * Generates a random boolean value.
      *
@@ -87,8 +89,8 @@ public class RandomUtils {
      */
     public static double nextDouble(final double startInclusive, final double endExclusive) {
         Validate.isTrue(endExclusive >= startInclusive,
-                "Start value must be smaller or equal to end value.");
-        Validate.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
+                VALIDATEMESSAGE1);
+        Validate.isTrue(startInclusive >= 0, VALIDATEMESSAGE2);
 
         if (startInclusive == endExclusive) {
             return startInclusive;
@@ -122,8 +124,8 @@ public class RandomUtils {
      */
     public static float nextFloat(final float startInclusive, final float endExclusive) {
         Validate.isTrue(endExclusive >= startInclusive,
-                "Start value must be smaller or equal to end value.");
-        Validate.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
+                VALIDATEMESSAGE1);
+        Validate.isTrue(startInclusive >= 0, VALIDATEMESSAGE2);
 
         if (startInclusive == endExclusive) {
             return startInclusive;
@@ -157,8 +159,8 @@ public class RandomUtils {
      */
     public static int nextInt(final int startInclusive, final int endExclusive) {
         Validate.isTrue(endExclusive >= startInclusive,
-                "Start value must be smaller or equal to end value.");
-        Validate.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
+                VALIDATEMESSAGE1);
+        Validate.isTrue(startInclusive >= 0, VALIDATEMESSAGE2);
 
         if (startInclusive == endExclusive) {
             return startInclusive;
@@ -212,8 +214,8 @@ public class RandomUtils {
      */
     public static long nextLong(final long startInclusive, final long endExclusive) {
         Validate.isTrue(endExclusive >= startInclusive,
-                "Start value must be smaller or equal to end value.");
-        Validate.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
+                VALIDATEMESSAGE1);
+        Validate.isTrue(startInclusive >= 0, VALIDATEMESSAGE2);
 
         if (startInclusive == endExclusive) {
             return startInclusive;
@@ -236,5 +238,7 @@ public class RandomUtils {
      * </p>
      */
     public RandomUtils() {
+        //This constructor is public and empty to permit tools that require a JavaBean
+        //instance to operate.
     }
 }
