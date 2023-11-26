@@ -194,7 +194,7 @@ public class RandomStringUtils {
         if (count == 0) {
             return StringUtils.EMPTY;
         }
-        Result result = validateRandomParameters(count, start, end, letters, numbers, chars);
+        Result result = validateParameters(count, start, end, letters, numbers, chars);
 
         final StringBuilder builder = new StringBuilder(count);
         final int gap = result.end - result.start;
@@ -224,12 +224,12 @@ public class RandomStringUtils {
                 continue;
             }
 
-            count = buildRandomString(count, letters, numbers, codePoint, builder, numberOfChars);
+            count = buildString(count, letters, numbers, codePoint, builder, numberOfChars);
         }
         return builder.toString();
     }
 
-    private static int buildRandomString(int count, boolean letters, boolean numbers, int codePoint, StringBuilder builder, int numberOfChars) {
+    private static int buildString(int count, boolean letters, boolean numbers, int codePoint, StringBuilder builder, int numberOfChars) {
         if (letters && Character.isLetter(codePoint)
                 || numbers && Character.isDigit(codePoint)
                 || !letters && !numbers) {
@@ -245,7 +245,7 @@ public class RandomStringUtils {
         return count;
     }
 
-    private static Result validateRandomParameters(int count, int start, int end, boolean letters, boolean numbers, char[] chars) {
+    private static Result validateParameters(int count, int start, int end, boolean letters, boolean numbers, char[] chars) {
         if (count < 0) {
             throw new IllegalArgumentException("Requested random string length " + count + " is less than 0.");
         }
