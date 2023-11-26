@@ -82,7 +82,7 @@ public class Validate {
      */
     public Validate() {
         /**
-         *  Empty constructor
+         *  Empty constructo
          */
     }
 

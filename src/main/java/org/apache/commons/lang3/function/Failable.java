@@ -519,6 +519,17 @@ public class Failable {
         }
         Streams.of(resources).forEach(r -> Objects.requireNonNull(r, "runnable"));
         Throwable th = null;
+        th = runMethod(action, resources, th);
+        if (th != null) {
+            try {
+                actualErrorHandler.accept(th);
+            } catch (final Throwable t) {
+                throw rethrow(t);
+            }
+        }
+    }
+
+    private static Throwable runMethod(FailableRunnable<? extends Throwable> action, FailableRunnable<? extends Throwable>[] resources, Throwable th) {
         try {
             action.run();
         } catch (final Throwable t) {
@@ -535,13 +546,7 @@ public class Failable {
                 }
             }
         }
-        if (th != null) {
-            try {
-                actualErrorHandler.accept(th);
-            } catch (final Throwable t) {
-                throw rethrow(t);
-            }
-        }
+        return th;
     }
 
     /**

@@ -91,7 +91,6 @@ public class SystemUtils {
      */
     @Deprecated
     public static final String FILE_SEPARATOR = SystemProperties.getFileSeparator();
-
     /**
      * The {@code java.awt.fonts} System Property.
      *
