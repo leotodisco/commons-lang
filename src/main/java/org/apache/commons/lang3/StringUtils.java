@@ -1073,7 +1073,9 @@ public class StringUtils {
 
     private static boolean checkInLength(CharSequence cs, char[] searchChars, int searchLength, int searchLast, int csLast, char ch, int i) {
         for (int j = 0; j < searchLength; j++) {
-            if (checkCurrentChar(cs, searchChars, searchLast, csLast, j, ch, i)) return true;
+            if (checkCurrentChar(cs, searchChars, searchLast, csLast, j, ch, i)) {
+                return true;
+            }
         }
         return false;
     }
