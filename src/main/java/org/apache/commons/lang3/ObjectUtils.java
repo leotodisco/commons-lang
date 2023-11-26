@@ -57,6 +57,8 @@ import org.apache.commons.lang3.time.DurationUtils;
 // because it is part of the signature of deprecated methods
 public class ObjectUtils {
 
+    private static final String ISOBJECTNULLMESSAGE = "object";
+
     /**
      * Class used as a null placeholder where {@code null}
      * has another meaning.
@@ -89,7 +91,7 @@ public class ObjectUtils {
          *
          * @return the singleton value
          */
-        private Object readResolve() {
+        protected Object readResolve() {
             return NULL;
         }
     }
@@ -236,16 +238,7 @@ public class ObjectUtils {
         if (obj instanceof Cloneable) {
             final Object result;
             if (isArray(obj)) {
-                final Class<?> componentType = obj.getClass().getComponentType();
-                if (componentType.isPrimitive()) {
-                    int length = Array.getLength(obj);
-                    result = Array.newInstance(componentType, length);
-                    while (length-- > 0) {
-                        Array.set(result, length, Array.get(obj, length));
-                    }
-                } else {
-                    result = ((Object[]) obj).clone();
-                }
+                result = manageArrays(obj);
             } else {
                 try {
                     final Method clone = obj.getClass().getMethod("clone");
@@ -268,6 +261,21 @@ public class ObjectUtils {
         }
 
         return null;
+    }
+
+    private static <T> Object manageArrays(T obj) {
+        final Object result;
+        final Class<?> componentType = obj.getClass().getComponentType();
+        if (componentType.isPrimitive()) {
+            int length = Array.getLength(obj);
+            result = Array.newInstance(componentType, length);
+            while (length-- > 0) {
+                Array.set(result, length, Array.get(obj, length));
+            }
+        } else {
+            result = ((Object[]) obj).clone();
+        }
+        return result;
     }
 
     /**
@@ -822,7 +830,7 @@ public class ObjectUtils {
      * @since 3.2
      */
     public static void identityToString(final Appendable appendable, final Object object) throws IOException {
-        Objects.requireNonNull(object, "object");
+        Objects.requireNonNull(object, ISOBJECTNULLMESSAGE);
         appendable.append(object.getClass().getName())
               .append(AT_SIGN)
               .append(identityHashCodeHex(object));
@@ -878,7 +886,7 @@ public class ObjectUtils {
      */
     @Deprecated
     public static void identityToString(final StrBuilder builder, final Object object) {
-        Objects.requireNonNull(object, "object");
+        Objects.requireNonNull(object, ISOBJECTNULLMESSAGE);
         final String name = object.getClass().getName();
         final String hexString = identityHashCodeHex(object);
         builder.ensureCapacity(builder.length() +  name.length() + 1 + hexString.length());
@@ -903,7 +911,7 @@ public class ObjectUtils {
      * @since 2.4
      */
     public static void identityToString(final StringBuffer buffer, final Object object) {
-        Objects.requireNonNull(object, "object");
+        Objects.requireNonNull(object, ISOBJECTNULLMESSAGE);
         final String name = object.getClass().getName();
         final String hexString = identityHashCodeHex(object);
         buffer.ensureCapacity(buffer.length() + name.length() + 1 + hexString.length());
@@ -928,7 +936,7 @@ public class ObjectUtils {
      * @since 3.2
      */
     public static void identityToString(final StringBuilder builder, final Object object) {
-        Objects.requireNonNull(object, "object");
+        Objects.requireNonNull(object, ISOBJECTNULLMESSAGE);
         final String name = object.getClass().getName();
         final String hexString = identityHashCodeHex(object);
         builder.ensureCapacity(builder.length() +  name.length() + 1 + hexString.length());
@@ -1247,7 +1255,7 @@ public class ObjectUtils {
      * @since 3.12.0
      */
     public static <T> T  requireNonEmpty(final T obj) {
-        return requireNonEmpty(obj, "object");
+        return requireNonEmpty(obj, ISOBJECTNULLMESSAGE);
     }
 
     /**
@@ -1408,6 +1416,8 @@ public class ObjectUtils {
      * instance to operate.</p>
      */
     public ObjectUtils() {
+        //This constructor is public and empty to permit tools that require a JavaBean
+        //Instance to operate
     }
 
 }

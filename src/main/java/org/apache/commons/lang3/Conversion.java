@@ -79,6 +79,9 @@ public class Conversion {
     private static final boolean[] TFFF = {true, false, false, false};
     private static final boolean[] FFFF = {false, false, false, false};
 
+    private static String buildExceptionString(final char hexDigit) {
+        return "Cannot interpret '" + hexDigit + "' as a hexadecimal digit";
+    }
     /**
      * Converts a hexadecimal digit into an int using the default (Lsb0) bit ordering.
      *
@@ -93,7 +96,7 @@ public class Conversion {
     public static int hexDigitToInt(final char hexDigit) {
         final int digit = Character.digit(hexDigit, 16);
         if (digit < 0) {
-            throw new IllegalArgumentException("Cannot interpret '" + hexDigit + "' as a hexadecimal digit");
+            throw new IllegalArgumentException(buildExceptionString(hexDigit));
         }
         return digit;
     }
@@ -150,7 +153,7 @@ public class Conversion {
         case 'F':
             return 0xF;
         default:
-            throw new IllegalArgumentException("Cannot interpret '" + hexDigit + "' as a hexadecimal digit");
+            throw new IllegalArgumentException(buildExceptionString(hexDigit));
         }
     }
 
@@ -207,7 +210,7 @@ public class Conversion {
         case 'F':
             return TTTT.clone();
         default:
-            throw new IllegalArgumentException("Cannot interpret '" + hexDigit + "' as a hexadecimal digit");
+            throw new IllegalArgumentException(buildExceptionString(hexDigit));
         }
     }
 
@@ -264,7 +267,7 @@ public class Conversion {
         case 'F':
             return TTTT.clone();
         default:
-            throw new IllegalArgumentException("Cannot interpret '" + hexDigit + "' as a hexadecimal digit");
+            throw new IllegalArgumentException(buildExceptionString(hexDigit));
         }
     }
 
@@ -303,27 +306,47 @@ public class Conversion {
         if (src.length == 0) {
             throw new IllegalArgumentException("Cannot convert an empty array.");
         }
+
         if (src.length > srcPos + 3 && src[srcPos + 3]) {
-            if (src[srcPos + 2]) {
-                if (src[srcPos + 1]) {
-                    return src[srcPos] ? 'f' : 'e';
-                }
-                return src[srcPos] ? 'd' : 'c';
-            }
-            if (src[srcPos + 1]) {
-                return src[srcPos] ? 'b' : 'a';
-            }
-            return src[srcPos] ? '9' : '8';
+            return processFirstDigit(src, srcPos);
         }
+
         if (src.length > srcPos + 2 && src[srcPos + 2]) {
-            if (src[srcPos + 1]) {
-                return src[srcPos] ? '7' : '6';
-            }
-            return src[srcPos] ? '5' : '4';
+            return processSecondDigit(src, srcPos);
         }
+
         if (src.length > srcPos + 1 && src[srcPos + 1]) {
-            return src[srcPos] ? '3' : '2';
+            return processThirdDigit(src, srcPos);
         }
+
+        return processFourthDigit(src, srcPos);
+    }
+
+    private static char processFirstDigit(final boolean[] src, final int srcPos) {
+        if (src[srcPos + 2]) {
+            if (src[srcPos + 1]) {
+                return src[srcPos] ? 'f' : 'e';
+            }
+            return src[srcPos] ? 'd' : 'c';
+        }
+        if (src[srcPos + 1]) {
+            return src[srcPos] ? 'b' : 'a';
+        }
+        return src[srcPos] ? '9' : '8';
+    }
+
+    private static char processSecondDigit(final boolean[] src, final int srcPos) {
+        if (src[srcPos + 1]) {
+            return src[srcPos] ? '7' : '6';
+        }
+        return src[srcPos] ? '5' : '4';
+    }
+
+    private static char processThirdDigit(final boolean[] src, final int srcPos) {
+        return src[srcPos] ? '3' : '2';
+    }
+
+    private static char processFourthDigit(final boolean[] src, final int srcPos) {
         return src[srcPos] ? '1' : '0';
     }
 
@@ -368,27 +391,47 @@ public class Conversion {
         if (src.length - srcPos < 4) {
             throw new IllegalArgumentException("src.length-srcPos<4: src.length=" + src.length + ", srcPos=" + srcPos);
         }
+
         if (src[srcPos + 3]) {
-            if (src[srcPos + 2]) {
-                if (src[srcPos + 1]) {
-                    return src[srcPos] ? 'f' : '7';
-                }
-                return src[srcPos] ? 'b' : '3';
-            }
-            if (src[srcPos + 1]) {
-                return src[srcPos] ? 'd' : '5';
-            }
-            return src[srcPos] ? '9' : '1';
+            return processFirstDigitMsb0(src, srcPos);
         }
+
+        if (src[srcPos + 2]) {
+            return processSecondDigitMsb0(src, srcPos);
+        }
+
+        if (src[srcPos + 1]) {
+            return processThirdDigitMsb0(src, srcPos);
+        }
+
+        return processFourthDigitMsb0(src, srcPos);
+    }
+
+    private static char processFirstDigitMsb0(final boolean[] src, final int srcPos) {
         if (src[srcPos + 2]) {
             if (src[srcPos + 1]) {
-                return src[srcPos] ? 'e' : '6';
+                return src[srcPos] ? 'f' : '7';
             }
-            return src[srcPos] ? 'a' : '2';
+            return src[srcPos] ? 'b' : '3';
         }
         if (src[srcPos + 1]) {
-            return src[srcPos] ? 'c' : '4';
+            return src[srcPos] ? 'd' : '5';
         }
+        return src[srcPos] ? '9' : '1';
+    }
+
+    private static char processSecondDigitMsb0(final boolean[] src, final int srcPos) {
+        if (src[srcPos + 1]) {
+            return src[srcPos] ? 'e' : '6';
+        }
+        return src[srcPos] ? 'a' : '2';
+    }
+
+    private static char processThirdDigitMsb0(final boolean[] src, final int srcPos) {
+        return src[srcPos] ? 'c' : '4';
+    }
+
+    private static char processFourthDigitMsb0(final boolean[] src, final int srcPos) {
         return src[srcPos] ? '8' : '0';
     }
 
@@ -438,26 +481,45 @@ public class Conversion {
         // Little-endian bit 0 position
         final int pos = src.length - 1 - srcPos;
         if (3 <= pos && src[pos - 3]) {
-            if (src[pos - 2]) {
-                if (src[pos - 1]) {
-                    return src[pos] ? 'f' : 'e';
-                }
-                return src[pos] ? 'd' : 'c';
-            }
-            if (src[pos - 1]) {
-                return src[pos] ? 'b' : 'a';
-            }
-            return src[pos] ? '9' : '8';
+            return processFirstDigitBeMsb0(src, pos);
         }
+
         if (2 <= pos && src[pos - 2]) {
-            if (src[pos - 1]) {
-                return src[pos] ? '7' : '6';
-            }
-            return src[pos] ? '5' : '4';
+            return processSecondDigitBeMsb0(src, pos);
         }
+
         if (1 <= pos && src[pos - 1]) {
-            return src[pos] ? '3' : '2';
+            return processThirdDigitBeMsb0(src, pos);
         }
+
+        return processFourthDigitBeMsb0(src, pos);
+    }
+
+    private static char processFirstDigitBeMsb0(final boolean[] src, final int pos) {
+        if (src[pos - 2]) {
+            if (src[pos - 1]) {
+                return src[pos] ? 'f' : 'e';
+            }
+            return src[pos] ? 'd' : 'c';
+        }
+        if (src[pos - 1]) {
+            return src[pos] ? 'b' : 'a';
+        }
+        return src[pos] ? '9' : '8';
+    }
+
+    private static char processSecondDigitBeMsb0(final boolean[] src, final int pos) {
+        if (src[pos - 1]) {
+            return src[pos] ? '7' : '6';
+        }
+        return src[pos] ? '5' : '4';
+    }
+
+    private static char processThirdDigitBeMsb0(final boolean[] src, final int pos) {
+        return src[pos] ? '3' : '2';
+    }
+
+    private static char processFourthDigitBeMsb0(final boolean[] src, final int pos) {
         return src[pos] ? '1' : '0';
     }
 

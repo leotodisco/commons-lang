@@ -1245,62 +1245,67 @@ public class ClassUtils {
      * @param autoboxing whether to use implicit autoboxing/unboxing between primitives and wrappers
      * @return {@code true} if assignment possible
      */
+
     public static boolean isAssignable(Class<?> cls, final Class<?> toClass, final boolean autoboxing) {
         if (toClass == null) {
             return false;
         }
-        // have to check for null, as isAssignableFrom doesn't
+
         if (cls == null) {
             return !toClass.isPrimitive();
         }
-        // autoboxing:
+
         if (autoboxing) {
-            if (cls.isPrimitive() && !toClass.isPrimitive()) {
-                cls = primitiveToWrapper(cls);
-                if (cls == null) {
-                    return false;
-                }
-            }
-            if (toClass.isPrimitive() && !cls.isPrimitive()) {
-                cls = wrapperToPrimitive(cls);
-                if (cls == null) {
-                    return false;
-                }
+            cls = handleAutoboxing(cls, toClass);
+            if (cls == null) {
+                return false;
             }
         }
+
         if (cls.equals(toClass)) {
             return true;
         }
+
         if (cls.isPrimitive()) {
-            if (!toClass.isPrimitive()) {
-                return false;
-            }
-            if (Integer.TYPE.equals(cls)) {
-                return Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-            }
-            if (Long.TYPE.equals(cls)) {
-                return Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-            }
-            if (Boolean.TYPE.equals(cls)) {
-                return false;
-            }
-            if (Double.TYPE.equals(cls)) {
-                return false;
-            }
-            if (Float.TYPE.equals(cls)) {
-                return Double.TYPE.equals(toClass);
-            }
-            if (Character.TYPE.equals(cls)  || Short.TYPE.equals(cls)) {
-                return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
-            }
-            if (Byte.TYPE.equals(cls)) {
-                return Short.TYPE.equals(toClass) || Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass)
+            return handlePrimitiveAssignability(cls, toClass);
+        }
+
+        return toClass.isAssignableFrom(cls);
+    }
+
+    private static Class<?> handleAutoboxing(Class<?> cls, Class<?> toClass) {
+        if (cls.isPrimitive() && !toClass.isPrimitive()) {
+            cls = primitiveToWrapper(cls);
+        } else if (toClass.isPrimitive() && !cls.isPrimitive()) {
+            cls = wrapperToPrimitive(cls);
+        }
+        return cls;
+    }
+
+    private static boolean handlePrimitiveAssignability(Class<?> cls, Class<?> toClass) {
+        if (!toClass.isPrimitive()) {
+            return false;
+        }
+
+        if (Integer.TYPE.equals(cls)) {
+            return Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+        } else if (Long.TYPE.equals(cls)) {
+            return Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+        } else if (Boolean.TYPE.equals(cls)) {
+            return false;
+        } else if (Double.TYPE.equals(cls)) {
+            return false;
+        } else if (Float.TYPE.equals(cls)) {
+            return Double.TYPE.equals(toClass);
+        } else if (Character.TYPE.equals(cls) || Short.TYPE.equals(cls)) {
+            return Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass) || Double.TYPE.equals(toClass);
+        } else if (Byte.TYPE.equals(cls)) {
+            return Short.TYPE.equals(toClass) || Integer.TYPE.equals(toClass) || Long.TYPE.equals(toClass) || Float.TYPE.equals(toClass)
                     || Double.TYPE.equals(toClass);
-            }
+        } else {
             // should never get here
             return false;
         }
-        return toClass.isAssignableFrom(cls);
     }
 
     /**
@@ -1622,6 +1627,7 @@ public class ClassUtils {
      * </p>
      */
     public ClassUtils() {
+        // This constructor is public and empty to permit tools that require a JavaBean instance to operate.
     }
 
 }
