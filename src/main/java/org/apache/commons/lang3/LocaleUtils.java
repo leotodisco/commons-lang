@@ -43,6 +43,8 @@ public class LocaleUtils {
     private static final String UNDETERMINED = "und";
     private static final char DASH = '-';
 
+    private static final String INVALIDLOCALEFORMATMESSAGE = "Invalid locale format: ";
+
     // class to avoid synchronization (Init on demand)
     static class SyncAvoid {
         /** Unmodifiable list of available locales. */
@@ -319,36 +321,43 @@ public class LocaleUtils {
         if (str.isEmpty()) { // LANG-941 - JDK 8 introduced an empty locale where all fields are blank
             return new Locale(StringUtils.EMPTY, StringUtils.EMPTY);
         }
-        if (str.contains("#")) { // LANG-879 - Cannot handle Java 7 script & extensions
-            throw new IllegalArgumentException("Invalid locale format: " + str);
-        }
         final int len = str.length();
-        if (len < 2) {
-            throw new IllegalArgumentException("Invalid locale format: " + str);
-        }
+
+        validateLocaleString(str, len);
+
         final char ch0 = str.charAt(0);
         if (ch0 == UNDERSCORE || ch0 == DASH) {
             if (len < 3) {
-                throw new IllegalArgumentException("Invalid locale format: " + str);
+                throw new IllegalArgumentException(INVALIDLOCALEFORMATMESSAGE + str);
             }
             final char ch1 = str.charAt(1);
             final char ch2 = str.charAt(2);
             if (!Character.isUpperCase(ch1) || !Character.isUpperCase(ch2)) {
-                throw new IllegalArgumentException("Invalid locale format: " + str);
+                throw new IllegalArgumentException(INVALIDLOCALEFORMATMESSAGE + str);
             }
             if (len == 3) {
                 return new Locale(StringUtils.EMPTY, str.substring(1, 3));
             }
             if (len < 5) {
-                throw new IllegalArgumentException("Invalid locale format: " + str);
+                throw new IllegalArgumentException(INVALIDLOCALEFORMATMESSAGE + str);
             }
             if (str.charAt(3) != ch0) {
-                throw new IllegalArgumentException("Invalid locale format: " + str);
+                throw new IllegalArgumentException(INVALIDLOCALEFORMATMESSAGE + str);
             }
             return new Locale(StringUtils.EMPTY, str.substring(1, 3), str.substring(4));
         }
 
         return parseLocale(str);
+    }
+
+    private static void validateLocaleString(String str, int len) {
+        if (str.contains("#")) { // LANG-879 - Cannot handle Java 7 script & extensions
+            throw new IllegalArgumentException(INVALIDLOCALEFORMATMESSAGE + str);
+        }
+
+        if (len < 2) {
+            throw new IllegalArgumentException(INVALIDLOCALEFORMATMESSAGE + str);
+        }
     }
 
     /**
@@ -359,6 +368,8 @@ public class LocaleUtils {
      * to operate.</p>
      */
     public LocaleUtils() {
+        //This constructor is public and empty to permit tools that require a JavaBean instance
+        //to operate.
     }
 
 }

@@ -194,6 +194,58 @@ public class RandomStringUtils {
         if (count == 0) {
             return StringUtils.EMPTY;
         }
+        Result result = validateRandomParameters(count, start, end, letters, numbers, chars);
+
+        final StringBuilder builder = new StringBuilder(count);
+        final int gap = result.end - result.start;
+
+        while (count-- != 0) {
+            final int codePoint;
+            if (chars == null) {
+                codePoint = random.nextInt(gap) + result.start;
+
+                switch (Character.getType(codePoint)) {
+                    case Character.UNASSIGNED:
+                    case Character.PRIVATE_USE:
+                    case Character.SURROGATE:
+                        count++;
+                        continue;
+                    default:
+                        // No action needed for other character types
+                }
+
+            } else {
+                codePoint = chars[random.nextInt(gap) + result.start];
+            }
+
+            final int numberOfChars = Character.charCount(codePoint);
+            if (count == 0 && numberOfChars > 1) {
+                count++;
+                continue;
+            }
+
+            count = buildRandomString(count, letters, numbers, codePoint, builder, numberOfChars);
+        }
+        return builder.toString();
+    }
+
+    private static int buildRandomString(int count, boolean letters, boolean numbers, int codePoint, StringBuilder builder, int numberOfChars) {
+        if (letters && Character.isLetter(codePoint)
+                || numbers && Character.isDigit(codePoint)
+                || !letters && !numbers) {
+            builder.appendCodePoint(codePoint);
+
+            if (numberOfChars == 2) {
+                count--;
+            }
+
+        } else {
+            count++;
+        }
+        return count;
+    }
+
+    private static Result validateRandomParameters(int count, int start, int end, boolean letters, boolean numbers, char[] chars) {
         if (count < 0) {
             throw new IllegalArgumentException("Requested random string length " + count + " is less than 0.");
         }
@@ -223,46 +275,17 @@ public class RandomStringUtils {
                     "or greater then (" + firstLetterAscii + ") for generating letters.");
         }
 
-        final StringBuilder builder = new StringBuilder(count);
-        final int gap = end - start;
+        return new Result(start, end);
+    }
 
-        while (count-- != 0) {
-            final int codePoint;
-            if (chars == null) {
-                codePoint = random.nextInt(gap) + start;
+    private static class Result {
+        public final int start;
+        public final int end;
 
-                switch (Character.getType(codePoint)) {
-                case Character.UNASSIGNED:
-                case Character.PRIVATE_USE:
-                case Character.SURROGATE:
-                    count++;
-                    continue;
-                }
-
-            } else {
-                codePoint = chars[random.nextInt(gap) + start];
-            }
-
-            final int numberOfChars = Character.charCount(codePoint);
-            if (count == 0 && numberOfChars > 1) {
-                count++;
-                continue;
-            }
-
-            if (letters && Character.isLetter(codePoint)
-                    || numbers && Character.isDigit(codePoint)
-                    || !letters && !numbers) {
-                builder.appendCodePoint(codePoint);
-
-                if (numberOfChars == 2) {
-                    count--;
-                }
-
-            } else {
-                count++;
-            }
+        Result(int start, int end) {
+            this.start = start;
+            this.end = end;
         }
-        return builder.toString();
     }
 
     /**
@@ -480,6 +503,8 @@ public class RandomStringUtils {
      * to operate.</p>
      */
     public RandomStringUtils() {
+        //This constructor is public and empty to permit tools that require a JavaBean instance
+        //to operate.
     }
 
 }
