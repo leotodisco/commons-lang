@@ -1274,10 +1274,8 @@ public class StringUtils {
         final int csLast = csLen - 1;
         final int searchLen = searchChars.length;
         final int searchLast = searchLen - 1;
-        if (iterateOverCharSequence(cs, searchChars, csLen, searchLen, searchLast, csLast)) {
-            return false;
-        }
-        return true;
+
+        return !iterateOverCharSequence(cs, searchChars, csLen, searchLen, searchLast, csLast);
     }
 
     private static boolean iterateOverCharSequence(CharSequence cs, char[] searchChars, int csLen, int searchLen, int searchLast, int csLast) {

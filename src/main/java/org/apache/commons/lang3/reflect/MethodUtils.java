@@ -981,10 +981,8 @@ public class MethodUtils {
     }
 
     private static boolean checkParameters(Method method, boolean ignoreAccess) {
-        if (!ignoreAccess && !MemberUtils.isAccessible(method)) {
-            return true;
-        }
-        return false;
+
+        return !ignoreAccess && !MemberUtils.isAccessible(method);
     }
 
     /**
