@@ -48,6 +48,10 @@ import org.apache.commons.lang3.builder.Builder;
  */
 public class TypeUtils {
 
+    public static final String RAW_CLASS = "rawClass";
+    public static final String TYPE_VARIABLE_MAP = "typeVariableMap";
+    public static final String FOUND_AN_UNHANDLED_TYPE = "found an unhandled type: ";
+
     /**
      * GenericArrayType implementation class.
      * @since 3.2
@@ -1017,7 +1021,7 @@ public class TypeUtils {
 
             return null;
         }
-        throw new IllegalStateException("found an unhandled type: " + type);
+        throw new IllegalStateException(FOUND_AN_UNHANDLED_TYPE + type);
     }
 
     /**
@@ -1093,7 +1097,7 @@ public class TypeUtils {
             return false;
         }
 
-        throw new IllegalStateException("found an unhandled type: " + type);
+        throw new IllegalStateException(FOUND_AN_UNHANDLED_TYPE + type);
     }
 
     /**
@@ -1169,7 +1173,7 @@ public class TypeUtils {
             return false;
         }
 
-        throw new IllegalStateException("found an unhandled type: " + type);
+        throw new IllegalStateException(FOUND_AN_UNHANDLED_TYPE + type);
     }
 
     /**
@@ -1296,7 +1300,7 @@ public class TypeUtils {
             return isAssignable(type, (TypeVariable<?>) toType, typeVarAssigns);
         }
 
-        throw new IllegalStateException("found an unhandled type: " + toType);
+        throw new IllegalStateException(FOUND_AN_UNHANDLED_TYPE + toType);
     }
 
     /**
@@ -1344,7 +1348,7 @@ public class TypeUtils {
             return false;
         }
 
-        throw new IllegalStateException("found an unhandled type: " + type);
+        throw new IllegalStateException(FOUND_AN_UNHANDLED_TYPE + type);
     }
 
     /**
@@ -1561,8 +1565,8 @@ public class TypeUtils {
      */
     public static final ParameterizedType parameterize(final Class<?> rawClass,
         final Map<TypeVariable<?>, Type> typeVariableMap) {
-        Objects.requireNonNull(rawClass, "rawClass");
-        Objects.requireNonNull(typeVariableMap, "typeVariableMap");
+        Objects.requireNonNull(rawClass, RAW_CLASS);
+        Objects.requireNonNull(typeVariableMap, TYPE_VARIABLE_MAP);
         return parameterizeWithOwner(null, rawClass,
             extractTypeArgumentsFrom(typeVariableMap, rawClass.getTypeParameters()));
     }
@@ -1628,8 +1632,8 @@ public class TypeUtils {
      */
     public static final ParameterizedType parameterizeWithOwner(final Type owner, final Class<?> rawClass,
         final Map<TypeVariable<?>, Type> typeVariableMap) {
-        Objects.requireNonNull(rawClass, "rawClass");
-        Objects.requireNonNull(typeVariableMap, "typeVariableMap");
+        Objects.requireNonNull(rawClass, RAW_CLASS);
+        Objects.requireNonNull(typeVariableMap, TYPE_VARIABLE_MAP);
         return parameterizeWithOwner(owner, rawClass,
             extractTypeArgumentsFrom(typeVariableMap, rawClass.getTypeParameters()));
     }
@@ -1647,7 +1651,7 @@ public class TypeUtils {
      */
     public static final ParameterizedType parameterizeWithOwner(final Type owner, final Class<?> rawClass,
         final Type... typeArguments) {
-        Objects.requireNonNull(rawClass, "rawClass");
+        Objects.requireNonNull(rawClass, RAW_CLASS);
         final Type useOwner;
         if (rawClass.getEnclosingClass() == null) {
             Validate.isTrue(owner == null, "no owner allowed for top-level %s", rawClass);
@@ -1765,7 +1769,7 @@ public class TypeUtils {
      * @throws NullPointerException if {@code typeVariableMap} is {@code null}
      */
     public static boolean typesSatisfyVariables(final Map<TypeVariable<?>, Type> typeVariableMap) {
-        Objects.requireNonNull(typeVariableMap, "typeVariableMap");
+        Objects.requireNonNull(typeVariableMap, TYPE_VARIABLE_MAP);
         // all types must be assignable to all the bounds of their mapped
         // type variable.
         for (final Map.Entry<TypeVariable<?>, Type> entry : typeVariableMap.entrySet()) {
@@ -1861,12 +1865,7 @@ public class TypeUtils {
             if (type instanceof ParameterizedType) {
                 final ParameterizedType p = (ParameterizedType) type;
                 final Map<TypeVariable<?>, Type> parameterizedTypeArguments;
-                if (p.getOwnerType() == null) {
-                    parameterizedTypeArguments = typeArguments;
-                } else {
-                    parameterizedTypeArguments = new HashMap<>(typeArguments);
-                    parameterizedTypeArguments.putAll(getTypeArguments(p));
-                }
+                parameterizedTypeArguments = getTypeVariableTypeMap(typeArguments, p);
                 final Type[] args = p.getActualTypeArguments();
                 for (int i = 0; i < args.length; i++) {
                     final Type unrolled = unrollVariables(parameterizedTypeArguments, args[i]);
@@ -1883,6 +1882,17 @@ public class TypeUtils {
             }
         }
         return type;
+    }
+
+    private static Map<TypeVariable<?>, Type> getTypeVariableTypeMap(Map<TypeVariable<?>, Type> typeArguments, ParameterizedType p) {
+        final Map<TypeVariable<?>, Type> parameterizedTypeArguments;
+        if (p.getOwnerType() == null) {
+            parameterizedTypeArguments = typeArguments;
+        } else {
+            parameterizedTypeArguments = new HashMap<>(typeArguments);
+            parameterizedTypeArguments.putAll(getTypeArguments(p));
+        }
+        return parameterizedTypeArguments;
     }
 
     /**

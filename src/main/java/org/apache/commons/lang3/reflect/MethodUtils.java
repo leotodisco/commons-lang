@@ -62,6 +62,7 @@ import org.apache.commons.lang3.Validate;
 public class MethodUtils {
 
     private static final Comparator<Method> METHOD_BY_SIGNATURE = Comparator.comparing(Method::toString);
+    public static final String NO_SUCH_ACCESSIBLE_METHOD = "No such accessible method: ";
 
     /**
      * {@link MethodUtils} instances should NOT be constructed in standard programming.
@@ -218,7 +219,7 @@ public class MethodUtils {
                 method.setAccessible(true);
             }
         } else {
-            messagePrefix = "No such accessible method: ";
+            messagePrefix = NO_SUCH_ACCESSIBLE_METHOD;
             method = getMatchingAccessibleMethod(cls, methodName, parameterTypes);
         }
 
@@ -333,7 +334,7 @@ public class MethodUtils {
         final Class<?> cls = object.getClass();
         final Method method = getAccessibleMethod(cls, methodName, parameterTypes);
         if (method == null) {
-            throw new NoSuchMethodException("No such accessible method: " + methodName + "() on object: " + cls.getName());
+            throw new NoSuchMethodException(NO_SUCH_ACCESSIBLE_METHOD + methodName + "() on object: " + cls.getName());
         }
         return method.invoke(object, args);
     }
@@ -365,7 +366,7 @@ public class MethodUtils {
         parameterTypes = ArrayUtils.nullToEmpty(parameterTypes);
         final Method method = getAccessibleMethod(cls, methodName, parameterTypes);
         if (method == null) {
-            throw new NoSuchMethodException("No such accessible method: "
+            throw new NoSuchMethodException(NO_SUCH_ACCESSIBLE_METHOD
                     + methodName + "() on class: " + cls.getName());
         }
         return method.invoke(null, args);
@@ -432,7 +433,7 @@ public class MethodUtils {
         final Method method = getMatchingAccessibleMethod(cls, methodName,
                 parameterTypes);
         if (method == null) {
-            throw new NoSuchMethodException("No such accessible method: "
+            throw new NoSuchMethodException(NO_SUCH_ACCESSIBLE_METHOD
                     + methodName + "() on class: " + cls.getName());
         }
         args = toVarArgs(method, args);
@@ -681,10 +682,7 @@ public class MethodUtils {
         Method bestMatch = null;
         for (final Method method : matchingMethods) {
             // get accessible version of method
-            final Method accessibleMethod = getAccessibleMethod(method);
-            if (accessibleMethod != null && (bestMatch == null || MemberUtils.compareMethodFit(accessibleMethod, bestMatch, parameterTypes) < 0)) {
-                bestMatch = accessibleMethod;
-            }
+            bestMatch = getVersions(parameterTypes, method, bestMatch);
         }
         if (bestMatch != null) {
             MemberUtils.setAccessibleWorkaround(bestMatch);
@@ -705,6 +703,14 @@ public class MethodUtils {
             }
         }
 
+        return bestMatch;
+    }
+
+    private static Method getVersions(Class<?>[] parameterTypes, Method method, Method bestMatch) {
+        final Method accessibleMethod = getAccessibleMethod(method);
+        if (accessibleMethod != null && (bestMatch == null || MemberUtils.compareMethodFit(accessibleMethod, bestMatch, parameterTypes) < 0)) {
+            bestMatch = accessibleMethod;
+        }
         return bestMatch;
     }
 
@@ -950,7 +956,7 @@ public class MethodUtils {
 
         Objects.requireNonNull(method, "method");
         Objects.requireNonNull(annotationCls, "annotationCls");
-        if (!ignoreAccess && !MemberUtils.isAccessible(method)) {
+        if (checkParameters(method, ignoreAccess)) {
             return null;
         }
 
@@ -972,6 +978,11 @@ public class MethodUtils {
         }
 
         return annotation;
+    }
+
+    private static boolean checkParameters(Method method, boolean ignoreAccess) {
+
+        return !ignoreAccess && !MemberUtils.isAccessible(method);
     }
 
     /**

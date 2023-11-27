@@ -1073,18 +1073,8 @@ public class StringUtils {
 
     private static boolean checkInLength(CharSequence cs, char[] searchChars, int searchLength, int searchLast, int csLast, char ch, int i) {
         for (int j = 0; j < searchLength; j++) {
-            if (searchChars[j] == ch) {
-                if (!Character.isHighSurrogate(ch)) {
-                    // ch is in the Basic Multilingual Plane
-                    return true;
-                }
-                if (j == searchLast) {
-                    // missing low surrogate, fine, like String.indexOf(String)
-                    return true;
-                }
-                if (i < csLast && searchChars[j + 1] == cs.charAt(i + 1)) {
-                    return true;
-                }
+            if (checkCurrentChar(cs, searchChars, searchLast, csLast, j, ch, i)) {
+                return true;
             }
         }
         return false;
@@ -1284,25 +1274,37 @@ public class StringUtils {
         final int csLast = csLen - 1;
         final int searchLen = searchChars.length;
         final int searchLast = searchLen - 1;
+
+        return !iterateOverCharSequence(cs, searchChars, csLen, searchLen, searchLast, csLast);
+    }
+
+    private static boolean iterateOverCharSequence(CharSequence cs, char[] searchChars, int csLen, int searchLen, int searchLast, int csLast) {
         for (int i = 0; i < csLen; i++) {
             final char ch = cs.charAt(i);
             for (int j = 0; j < searchLen; j++) {
-                if (searchChars[j] == ch) {
-                    if (!Character.isHighSurrogate(ch)) {
-                        // ch is in the Basic Multilingual Plane
-                        return false;
-                    }
-                    if (j == searchLast) {
-                        // missing low surrogate, fine, like String.indexOf(String)
-                        return false;
-                    }
-                    if (i < csLast && searchChars[j + 1] == cs.charAt(i + 1)) {
-                        return false;
-                    }
+                if (checkCurrentChar(cs, searchChars, searchLast, csLast, j, ch, i)) {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
+    }
+
+    private static boolean checkCurrentChar(CharSequence cs, char[] searchChars, int searchLast, int csLast, int j, char ch, int i) {
+        if (searchChars[j] == ch) {
+            if (!Character.isHighSurrogate(ch)) {
+                // ch is in the Basic Multilingual Plane
+                return true;
+            }
+            if (j == searchLast) {
+                // missing low surrogate, fine, like String.indexOf(String)
+                return true;
+            }
+            if (i < csLast && searchChars[j + 1] == cs.charAt(i + 1)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -2492,15 +2494,9 @@ public class StringUtils {
         int m = t.length(); // length of t
 
         // if one string is empty, the edit distance is necessarily the length of the other
-        if (n == 0) {
-            return m <= threshold ? m : -1;
-        }
-        if (m == 0) {
-            return n <= threshold ? n : -1;
-        }
-        if (Math.abs(n - m) > threshold) {
-            // no need to calculate the distance if the length difference is greater than the threshold
-            return -1;
+        Integer m1 = shortCircuitTest(threshold, n, m);
+        if (m1 != null) {
+            return m1;
         }
 
         if (n > m) {
@@ -2517,10 +2513,7 @@ public class StringUtils {
         int[] tmp; // placeholder to assist in swapping p and d
 
         // fill in starting table values
-        final int boundary = Math.min(n, threshold) + 1;
-        for (int i = 0; i < boundary; i++) {
-            p[i] = i;
-        }
+        final int boundary = fillStartingTableValues(threshold, n, p);
         // these fills ensure that the value above the rightmost entry of our
         // stripe will be ignored in following loop iterations
         Arrays.fill(p, boundary, p.length, Integer.MAX_VALUE);
@@ -2546,15 +2539,7 @@ public class StringUtils {
             }
 
             // iterates through [min, max] in s
-            for (int i = min; i <= max; i++) {
-                if (s.charAt(i - 1) == jOfT) {
-                    // diagonally left and up
-                    d[i] = p[i - 1];
-                } else {
-                    // 1 + minimum of cell to the left, to the top, diagonally left and up
-                    d[i] = 1 + Math.min(Math.min(d[i - 1], p[i]), p[i - 1]);
-                }
-            }
+            iterateCharSequence(s, min, max, jOfT, d, p);
 
             // copy current distance counts to 'previous row' distance counts
             tmp = p;
@@ -2568,6 +2553,40 @@ public class StringUtils {
             return p[n];
         }
         return -1;
+    }
+
+    private static void iterateCharSequence(CharSequence s, int min, int max, char jOfT, int[] d, int[] p) {
+        for (int i = min; i <= max; i++) {
+            if (s.charAt(i - 1) == jOfT) {
+                // diagonally left and up
+                d[i] = p[i - 1];
+            } else {
+                // 1 + minimum of cell to the left, to the top, diagonally left and up
+                d[i] = 1 + Math.min(Math.min(d[i - 1], p[i]), p[i - 1]);
+            }
+        }
+    }
+
+    private static int fillStartingTableValues(int threshold, int n, int[] p) {
+        final int boundary = Math.min(n, threshold) + 1;
+        for (int i = 0; i < boundary; i++) {
+            p[i] = i;
+        }
+        return boundary;
+    }
+
+    private static Integer shortCircuitTest(int threshold, int n, int m) {
+        if (n == 0) {
+            return m <= threshold ? m : -1;
+        }
+        if (m == 0) {
+            return n <= threshold ? n : -1;
+        }
+        if (Math.abs(n - m) > threshold) {
+            // no need to calculate the distance if the length difference is greater than the threshold
+            return -1;
+        }
+        return null;
     }
 
     /**
