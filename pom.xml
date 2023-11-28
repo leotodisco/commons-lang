@@ -104,7 +104,7 @@
       <email>ggregory at apache.org</email>
       <url>https://www.garygregory.com</url>
       <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
         <role>PMC Member</role>
       </roles>
@@ -526,6 +526,11 @@
   <dependencies>
     <!-- testing -->
     <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-junit5-plugin</artifactId>
+      <version>1.2.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
@@ -641,6 +646,18 @@
    <defaultGoal>clean verify apache-rat:check checkstyle:check japicmp:cmp spotbugs:check pmd:check javadoc:javadoc</defaultGoal>
    <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <dependencies>
+            <!-- https://mvnrepository.com/artifact/org.pitest/pitest-junit5-plugin -->
+            <dependency>
+              <groupId>org.pitest</groupId>
+              <artifactId>pitest-junit5-plugin</artifactId>
+              <version>1.2.0</version>
+            </dependency>
+          </dependencies>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
@@ -949,10 +966,10 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <excludes>
-                <exclude>org/apache/commons/lang3/time/Java15BugFastDateParserTest.java</exclude>               
+                <exclude>org/apache/commons/lang3/time/Java15BugFastDateParserTest.java</exclude>
               </excludes>
             </configuration>
-          </plugin>        
+          </plugin>
         </plugins>
       </build>
     </profile>
