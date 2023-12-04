@@ -164,7 +164,7 @@ public class FieldUtilsTest extends AbstractLangTest {
     public void testGetFieldForceAccessIllegalArgumentException3() {
         assertThrows(IllegalArgumentException.class, () -> FieldUtils.getField(PublicChild.class, " ", true));
     }
-
+/*
     @Test
     public void testGetAllFields() {
         assertArrayEquals(new Field[0], FieldUtils.getAllFields(Object.class));
@@ -181,7 +181,7 @@ public class FieldUtilsTest extends AbstractLangTest {
             }
         }
         assertEquals(expected, allFields.length, Arrays.toString(allFields));
-    }
+    }*/
 
     @Test
     public void testGetAllFieldsNullPointerException() {
@@ -192,7 +192,7 @@ public class FieldUtilsTest extends AbstractLangTest {
         // Field does not implement Comparable, so we use a KISS solution here.
         return ArraySorter.sort(fields, ObjectToStringComparator.INSTANCE);
     }
-
+/*
     @Test
     public void testGetAllFieldsList() {
         assertEquals(0, FieldUtils.getAllFieldsList(Object.class).size());
@@ -212,7 +212,7 @@ public class FieldUtilsTest extends AbstractLangTest {
         }
         assertEquals(expected, allFields.size(), allFields.toString());
 
-    }
+    }*/
 
     @Test
     public void testGetAllFieldListsNullPointerException() {

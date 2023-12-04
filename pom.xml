@@ -657,6 +657,11 @@
               <version>1.2.0</version>
             </dependency>
           </dependencies>
+          <configuration>
+            <mutators>
+              <mutator>VOID_METHOD_CALLS</mutator>
+            </mutators>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
